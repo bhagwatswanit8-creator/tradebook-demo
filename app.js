@@ -1238,41 +1238,19 @@ async function silentMt5AutoSync() {
 // ── MT5 credential panel renderer ────────────────────────────────────────────
 
 function renderMt5CredentialPanel(syncResult) {
-  const savedLogin = currentUser?.mt5Login || "";
-  const savedServer = currentUser?.mt5Server || "";
-  const hasCreds = currentUser?.hasMt5Creds || false;
-
-  const credForm = document.querySelector("[data-mt5-save-form]");
-  const credStatus = document.querySelector("[data-mt5-cred-status]");
-  const credLoginEl = document.querySelector("[data-mt5-saved-login]");
-  const credServerEl = document.querySelector("[data-mt5-saved-server]");
-
-  if (!credForm && !credStatus) return;
-
-  if (hasCreds) {
-    if (credForm) credForm.hidden = true;
-    if (credStatus) {
-      credStatus.hidden = false;
-      if (credLoginEl) credLoginEl.textContent = savedLogin;
-      if (credServerEl) credServerEl.textContent = savedServer;
+  const bridgeOnline = syncResult?.ok === true;
+  const msgEl = document.querySelector("[data-mt5-message]");
+  if (msgEl) {
+    if (bridgeOnline) {
+      msgEl.textContent = "MT5 bridge connected — syncing your trades in the background.";
+      msgEl.dataset.messageType = "info";
+    } else if (currentUser?.hasMt5Creds) {
+      msgEl.textContent = syncResult?.reason === "bridge_offline"
+        ? "MT5 credentials saved. Bridge offline — start the bridge on your VPS/PC for auto-sync."
+        : "MT5 credentials saved. Auto-sync active when bridge is running.";
+      msgEl.dataset.messageType = "info";
     }
-    const bridgeOnline = syncResult?.ok === true;
-    const msgEl = document.querySelector("[data-mt5-message]");
-    if (msgEl) {
-      if (bridgeOnline) {
-        msgEl.textContent = "MT5 bridge connected — syncing your trades in the background.";
-        msgEl.dataset.messageType = "info";
-      } else {
-        msgEl.textContent = syncResult?.reason === "bridge_offline"
-          ? "MT5 credentials saved. Bridge offline — start the bridge on your VPS/PC for auto-sync."
-          : "MT5 credentials saved. Auto-sync active when bridge is running.";
-        msgEl.dataset.messageType = "info";
-      }
-      msgEl.hidden = false;
-    }
-  } else {
-    if (credForm) credForm.hidden = false;
-    if (credStatus) credStatus.hidden = true;
+    msgEl.hidden = false;
   }
 }
 
@@ -2369,59 +2347,6 @@ if (tradeForm) {
     }
   });
 }
-
-// ── MT5 save-credentials form ─────────────────────────────────────────────────
-
-document.querySelector("[data-mt5-save-form]")?.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  if (!requireLogin()) return;
-  const form = new FormData(e.currentTarget);
-  const login = String(form.get("mt5SaveLogin") || "").trim().replace(/\s+/g, "");
-  const password = String(form.get("mt5SavePassword") || "");
-  const server = String(form.get("mt5SaveServer") || "").trim();
-  const btn = e.currentTarget.querySelector("[type=submit]");
-
-  if (!login || !password || !server) {
-    showAppStatus("Enter your MT5 account number, password, and broker server.", "error");
-    return;
-  }
-  if (!/^\d{4,20}$/.test(login)) {
-    showAppStatus("MT5 login should be a numeric account number only.", "error");
-    return;
-  }
-
-  const orig = btn?.textContent;
-  if (btn) { btn.disabled = true; btn.textContent = "Saving…"; }
-  try {
-    await saveMt5CredsToBackend(login, password, server);
-    renderMt5CredentialPanel();
-    showAppStatus("MT5 credentials saved — auto-sync is now active.", "success");
-    e.currentTarget.reset();
-    // Immediately trigger a silent sync with new credentials
-    silentMt5AutoSync();
-  } catch (err) {
-    showAppStatus(err.message || "Could not save MT5 credentials.", "error");
-  } finally {
-    if (btn) { btn.disabled = false; btn.textContent = orig; }
-  }
-});
-
-document.querySelector("[data-mt5-remove-creds]")?.addEventListener("click", async () => {
-  if (!requireLogin()) return;
-  try {
-    await apiRequest("/mt5/credentials", { method: "DELETE" });
-    if (currentUser) {
-      currentUser.hasMt5Creds = false;
-      currentUser.mt5Login = "";
-      currentUser.mt5Server = "";
-      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ token: authToken, user: currentUser }));
-    }
-    renderMt5CredentialPanel();
-    showAppStatus("MT5 credentials removed.", "info");
-  } catch (err) {
-    showAppStatus("Could not remove credentials.", "error");
-  }
-});
 
 [mt5Login, mt5Password, mt5Server].forEach((field) => {
   field?.addEventListener("input", prepareMt5AccountView);
