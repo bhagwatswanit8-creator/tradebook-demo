@@ -1333,9 +1333,14 @@ function renderLivePositions(data) {
 
 function startEaStatusPolling() {
   clearInterval(eaStatusPollTimer);
-  // If MetaApi is connected, use the real-time SSE stream instead
+  // If MetaApi is fully connected, use the real-time SSE stream instead
   if (currentUser?.hasMetaApi) {
     startMt5Stream();
+    return;
+  }
+  // If credentials were saved but provisioning hasn't finished yet, resume polling
+  if (currentUser?.hasMt5Creds && !currentUser?.hasMetaApi) {
+    startMetaApiPollUntilReady();
     return;
   }
   if (!authToken) return;
@@ -1414,12 +1419,9 @@ document.querySelector("[data-metaapi-connect-form]")?.addEventListener("submit"
         localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ token: authToken, user: currentUser }));
       }
       renderMetaApiPanel();
-      showAppStatus("MT5 connected! Syncing your trade history in the background…", "success");
       e.currentTarget.reset();
-      // Reload trades after 30s to pick up imported data
-      setTimeout(() => {
-        loadTrades().then(() => { renderMt5TradePreview(); renderTradeData(); }).catch(() => {});
-      }, 30000);
+      showAppStatus("Credentials saved — connecting to MT5 cloud, please wait…", "success");
+      startMetaApiPollUntilReady();
     } else {
       showAppStatus(result.message || "Could not connect MT5.", "error");
     }
@@ -1429,6 +1431,57 @@ document.querySelector("[data-metaapi-connect-form]")?.addEventListener("submit"
     if (btn) { btn.disabled = false; btn.textContent = orig; }
   }
 });
+
+// Poll /api/auth/me until hasMetaApi is true, then activate SSE stream + trades.
+// Gives up after ~3 minutes with a helpful status message.
+let _metaApiPollTimer = null;
+function startMetaApiPollUntilReady() {
+  if (_metaApiPollTimer) clearTimeout(_metaApiPollTimer);
+  const started = Date.now();
+  const maxMs   = 3 * 60 * 1000;   // 3 minute limit
+  const intervalMs = 5000;          // poll every 5s
+
+  const msgEl = document.querySelector("[data-mt5-message]");
+
+  function updatePendingMsg(elapsed) {
+    const secs = Math.floor(elapsed / 1000);
+    const txt  = `Cloud connection pending… (${secs}s) — MT5 servers can take up to 2 minutes.`;
+    if (msgEl) { msgEl.textContent = txt; msgEl.hidden = false; }
+  }
+
+  async function poll() {
+    const elapsed = Date.now() - started;
+    if (elapsed > maxMs) {
+      if (msgEl) msgEl.textContent = "Connection timed out. Try clicking Sync Now or refresh the page.";
+      showAppStatus("Cloud connection timed out. Try Sync Now below.", "error");
+      return;
+    }
+    updatePendingMsg(elapsed);
+    try {
+      const fresh = await apiRequest("/auth/me");
+      const user  = fresh?.user || fresh;
+      if (user?.hasMetaApi) {
+        // Provisioning done — update local state
+        if (currentUser) {
+          Object.assign(currentUser, {
+            hasMetaApi:       true,
+            metaApiAccountId: user.metaApiAccountId,
+            hasMt5Creds:      true,
+          });
+          localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ token: authToken, user: currentUser }));
+        }
+        renderMetaApiPanel();
+        showAppStatus("MT5 connected! Live positions and trade history synced.", "success");
+        startMt5Stream();
+        loadTrades().then(() => { renderMt5TradePreview(); renderTradeData(); }).catch(() => {});
+        return;
+      }
+    } catch (_) { /* network blip — keep polling */ }
+    _metaApiPollTimer = setTimeout(poll, intervalMs);
+  }
+
+  _metaApiPollTimer = setTimeout(poll, intervalMs);
+}
 
 // Sync Now button
 document.querySelector("[data-metaapi-sync-btn]")?.addEventListener("click", async () => {
