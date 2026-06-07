@@ -1249,7 +1249,7 @@ function renderLivePositions(data) {
   if (accountEl && acc) {
     const equity = Number(acc.equity || 0).toFixed(2);
     const bal = Number(acc.balance || 0).toFixed(2);
-    const floatPnl = (Number(acc.equity || 0) - Number(acc.balance || 0));
+    const floatPnl = Number(acc.equity || 0) - Number(acc.balance || 0);
     const pnlStr = (floatPnl >= 0 ? "+" : "") + floatPnl.toFixed(2);
     accountEl.textContent = `Balance: ${bal} ${acc.currency} · Equity: ${equity} · Float: ${pnlStr}`;
   }
@@ -1258,11 +1258,9 @@ function renderLivePositions(data) {
   const count = positions.length;
   if (posCountEl) posCountEl.textContent = count > 0 ? count : "—";
 
-  if (posListEl) {
-    if (count === 0) {
-      posListEl.innerHTML = '<div style="opacity:.5;font-size:0.85rem;padding:6px 0">No open positions right now.</div>';
-    } else {
-      posListEl.innerHTML = positions.map(p => {
+  const posHtml = count === 0
+    ? '<div style="opacity:.5;font-size:0.85rem;padding:6px 0">No open positions right now.</div>'
+    : positions.map(p => {
         const pnl = Number(p.pnl || 0) + Number(p.swap || 0);
         const pnlColor = pnl >= 0 ? "#35ffa8" : "#ff6b6b";
         const pnlStr = (pnl >= 0 ? "+" : "") + pnl.toFixed(2);
@@ -1277,8 +1275,8 @@ function renderLivePositions(data) {
           <strong style="color:${pnlColor};font-size:0.95rem;min-width:60px;text-align:right">${pnlStr}</strong>
         </div>`;
       }).join("");
-    }
-  }
+
+  if (posListEl) posListEl.innerHTML = posHtml;
 
   if (msgEl && currentUser?.hasMetaApi) {
     const totalPnl = Number(data.totalPnl || 0);
@@ -1289,8 +1287,46 @@ function renderLivePositions(data) {
     msgEl.hidden = false;
   }
 
-  // Update dashboard PnL card with floating PnL
-  renderMt5TradePreview();
+  // ── Update live ticker bar ──────────────────────────────────────────────────
+  const ticker     = document.querySelector("[data-live-ticker]");
+  const tickerPos  = document.querySelector("[data-ticker-positions]");
+  const tickerPnl  = document.querySelector("[data-ticker-float-pnl]");
+  const tickerEq   = document.querySelector("[data-ticker-equity]");
+
+  const totalFloat = positions.reduce((s, p) => s + Number(p.pnl || 0) + Number(p.swap || 0), 0);
+
+  if (ticker) {
+    ticker.hidden = count === 0 && !acc;
+    // Flash animation on every update
+    ticker.classList.remove("live-ticker-flash");
+    void ticker.offsetWidth;
+    ticker.classList.add("live-ticker-flash");
+  }
+  if (tickerPos) tickerPos.textContent = count > 0 ? `${count} position${count > 1 ? "s" : ""}` : "no positions";
+  if (tickerPnl) {
+    tickerPnl.textContent = (totalFloat >= 0 ? "+" : "") + formatCurrency(totalFloat);
+    tickerPnl.classList.toggle("profit", totalFloat > 0);
+    tickerPnl.classList.toggle("loss", totalFloat < 0);
+  }
+  if (tickerEq && acc) {
+    tickerEq.textContent = `Equity ${Number(acc.equity || 0).toFixed(2)} ${acc.currency}`;
+  }
+
+  // ── Update dashboard open positions card ────────────────────────────────────
+  const dashPosCard   = document.querySelector("[data-dashboard-open-positions-card]");
+  const dashPosList   = document.querySelector("[data-dashboard-open-positions-list]");
+  const dashPosNotice = document.querySelector("[data-dashboard-open-notice]");
+  const dashPosCount  = document.querySelector("[data-open-positions]");
+
+  if (dashPosCard) dashPosCard.hidden = false;
+  if (dashPosNotice) dashPosNotice.hidden = count > 0;
+  if (dashPosList && count > 0) dashPosList.innerHTML = posHtml;
+  if (dashPosCount) dashPosCount.textContent = count > 0
+    ? `${count} open position${count > 1 ? "s" : ""}`
+    : "No open positions";
+
+  // Update PnL cards with new floating P&L
+  renderDashboardPnlCards();
 }
 
 // ── Background EA polling (kept for non-MetaApi fallback) ────────────────────
