@@ -558,6 +558,7 @@ document.querySelector("[data-login-form]")?.addEventListener("submit", async (e
 });
 
 document.querySelector("[data-logout]")?.addEventListener("click", () => {
+  stopMt5Stream();
   authToken = "";
   currentUser = null;
   currentTrades = [];
