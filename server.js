@@ -2371,6 +2371,140 @@ app.post("/api/ai/chat", requireUser, async (req, res) => {
   }
 });
 
+// ── Real-time MT5 SSE stream ──────────────────────────────────────────────────
+// GET /api/mt5/live-stream?token=... — streams positions + PnL as SSE events
+// Polls MetaApi every 500ms for open positions, every 5s for new closed deals.
+
+app.get("/api/mt5/live-stream", async (req, res) => {
+  const token = String(req.query.token || "");
+  const payload = verifyToken(token);
+  if (!payload?.userId) return res.status(401).end();
+
+  const db = await getDb();
+  const user = await getUserById(payload.userId, db);
+  if (!user || !user.metaApiAccountId) return res.status(400).end();
+
+  const accountId = user.metaApiAccountId;
+  const login = user.mt5Login || "";
+  const server = user.mt5Server || "";
+  const userId = payload.userId;
+
+  // SSE headers
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    "Connection": "keep-alive",
+    "X-Accel-Buffering": "no"
+  });
+
+  let closed = false;
+  let lastDealCheck = Date.now();
+  let knownDealIds = null;
+
+  function send(event, data) {
+    if (closed) return;
+    res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+  }
+
+  send("connected", { ok: true, accountId });
+
+  async function streamTick() {
+    if (closed) return;
+    try {
+      // Fetch open positions every tick (500ms)
+      const [positions, accountInfo] = await Promise.all([
+        metaApi.fetchOpenPositions(accountId),
+        metaApi.fetchAccountInfo(accountId)
+      ]);
+
+      const mapped = positions.map(p => ({
+        symbol: p.symbol,
+        direction: p.type === "POSITION_TYPE_SELL" ? "short" : "long",
+        lotSize: Number(p.volume || 0),
+        entry: Number(p.openPrice || 0),
+        pnl: Number(p.profit || 0),
+        swap: Number(p.swap || 0),
+        currentPrice: Number(p.currentPrice || 0),
+        openTime: p.time ? new Date(p.time * 1000).toLocaleTimeString() : "",
+        mt5DealId: String(p.id || "")
+      }));
+
+      send("positions", {
+        positions: mapped,
+        count: mapped.length,
+        totalPnl: mapped.reduce((s, p) => s + p.pnl + p.swap, 0),
+        account: accountInfo ? {
+          balance: Number(accountInfo.balance || 0),
+          equity: Number(accountInfo.equity || 0),
+          margin: Number(accountInfo.margin || 0),
+          freeMargin: Number(accountInfo.freeMargin || 0),
+          currency: accountInfo.currency || "",
+          leverage: accountInfo.leverage || 0
+        } : null,
+        ts: Date.now()
+      });
+
+      // Every 5s check for new closed deals and auto-import
+      if (Date.now() - lastDealCheck > 5000) {
+        lastDealCheck = Date.now();
+        const deals = await metaApi.fetchAccountHistory(accountId);
+        const tradeable = deals.filter(d =>
+          d.entryType === "DEAL_ENTRY_OUT" || d.entryType === "DEAL_ENTRY_OUT_BY"
+        );
+
+        if (db) {
+          const mongoId = makeMongoUserId(userId);
+          if (!knownDealIds) {
+            const existing = await db.collection("trades").find(
+              { userId: mongoId, source: "metaapi" },
+              { projection: { mt5DealId: 1 } }
+            ).toArray();
+            knownDealIds = new Set(existing.map(t => String(t.mt5DealId)));
+          }
+          const now = new Date();
+          let inserted = 0;
+          for (const deal of tradeable) {
+            const mapped = metaApi.mapDealToTrade(deal, login, server);
+            if (knownDealIds.has(mapped.mt5DealId)) continue;
+            await db.collection("trades").insertOne({ userId: mongoId, createdAt: now, updatedAt: now, ...mapped });
+            knownDealIds.add(mapped.mt5DealId);
+            inserted++;
+          }
+          if (inserted > 0) {
+            send("trades_updated", { inserted, message: `${inserted} new trade${inserted > 1 ? "s" : ""} imported.` });
+          }
+        }
+
+        // Save last sync timestamp
+        if (db) {
+          await db.collection("users").updateOne(
+            { _id: makeMongoUserId(userId) },
+            { $set: { mt5EaLastSync: new Date().toISOString(), hasMetaApi: true } }
+          );
+        }
+      }
+    } catch (err) {
+      send("error", { message: err.message });
+    }
+
+    if (!closed) setTimeout(streamTick, 500);
+  }
+
+  // Keepalive ping every 20s to prevent proxy timeouts
+  const keepalive = setInterval(() => {
+    if (closed) { clearInterval(keepalive); return; }
+    res.write(": ping\n\n");
+  }, 20000);
+
+  req.on("close", () => {
+    closed = true;
+    clearInterval(keepalive);
+  });
+
+  // Start first tick after brief init delay
+  setTimeout(streamTick, 800);
+});
+
 app.get(["/", "/index.html"], (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });

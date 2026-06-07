@@ -1193,14 +1193,116 @@ function renderEaStatus(data) {
   if (hasSynced) loadTrades().then(renderTradeData).catch(function(){});
 }
 
-// ── Background EA polling (always on after login) ────────────────────────────
+// ── Real-time MT5 SSE stream ──────────────────────────────────────────────────
+
+let mt5Stream = null;
+
+function startMt5Stream() {
+  if (!authToken || !currentUser?.hasMetaApi) return;
+  stopMt5Stream();
+
+  const url = `/api/mt5/live-stream?token=${encodeURIComponent(authToken)}`;
+  mt5Stream = new EventSource(url);
+
+  mt5Stream.addEventListener("positions", (e) => {
+    try {
+      const data = JSON.parse(e.data);
+      // Update live positions instantly
+      liveMt5Positions = data.positions || [];
+      renderLivePositions(data);
+    } catch {}
+  });
+
+  mt5Stream.addEventListener("trades_updated", (e) => {
+    try {
+      const data = JSON.parse(e.data);
+      showAppStatus(data.message || "New trades imported.", "success");
+      loadTrades().then(() => { renderMt5TradePreview(); renderTradeData(); }).catch(() => {});
+    } catch {}
+  });
+
+  mt5Stream.addEventListener("error", () => {
+    // Auto-reconnects after 3s on error
+    stopMt5Stream();
+    if (authToken && currentUser?.hasMetaApi) setTimeout(startMt5Stream, 3000);
+  });
+}
+
+function stopMt5Stream() {
+  if (mt5Stream) { mt5Stream.close(); mt5Stream = null; }
+}
+
+function renderLivePositions(data) {
+  const lastSyncEl = document.querySelector("[data-ea-last-sync]");
+  const accountEl  = document.querySelector("[data-ea-account-name]");
+  const posCountEl = document.querySelector("[data-ea-position-count]");
+  const posListEl  = document.querySelector("[data-ea-position-list]");
+  const badgeEl    = document.querySelector("[data-ea-sync-badge]");
+  const msgEl      = document.querySelector("[data-mt5-message]");
+
+  const now = new Date();
+  if (lastSyncEl) lastSyncEl.textContent = "Live · " + now.toLocaleTimeString();
+  if (badgeEl) badgeEl.hidden = false;
+
+  const acc = data.account;
+  if (accountEl && acc) {
+    const equity = Number(acc.equity || 0).toFixed(2);
+    const bal = Number(acc.balance || 0).toFixed(2);
+    const floatPnl = (Number(acc.equity || 0) - Number(acc.balance || 0));
+    const pnlStr = (floatPnl >= 0 ? "+" : "") + floatPnl.toFixed(2);
+    accountEl.textContent = `Balance: ${bal} ${acc.currency} · Equity: ${equity} · Float: ${pnlStr}`;
+  }
+
+  const positions = data.positions || [];
+  const count = positions.length;
+  if (posCountEl) posCountEl.textContent = count > 0 ? count : "—";
+
+  if (posListEl) {
+    if (count === 0) {
+      posListEl.innerHTML = '<div style="opacity:.5;font-size:0.85rem;padding:6px 0">No open positions right now.</div>';
+    } else {
+      posListEl.innerHTML = positions.map(p => {
+        const pnl = Number(p.pnl || 0) + Number(p.swap || 0);
+        const pnlColor = pnl >= 0 ? "#35ffa8" : "#ff6b6b";
+        const pnlStr = (pnl >= 0 ? "+" : "") + pnl.toFixed(2);
+        const dir = (p.direction || "").toUpperCase();
+        const price = p.currentPrice ? ` · ${Number(p.currentPrice).toFixed(p.currentPrice > 100 ? 2 : 5)}` : "";
+        return `<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+          <span style="font-size:0.83rem;opacity:.85">
+            <strong>${escapeHtml(p.symbol || "")}</strong>
+            <span style="opacity:.6"> ${dir} ${p.lotSize}L${price}</span>
+            <span style="opacity:.45;font-size:0.75rem"> · open ${escapeHtml(p.openTime || "")}</span>
+          </span>
+          <strong style="color:${pnlColor};font-size:0.95rem;min-width:60px;text-align:right">${pnlStr}</strong>
+        </div>`;
+      }).join("");
+    }
+  }
+
+  if (msgEl && currentUser?.hasMetaApi) {
+    const totalPnl = Number(data.totalPnl || 0);
+    const pnlStr = (totalPnl >= 0 ? "+" : "") + totalPnl.toFixed(2);
+    msgEl.textContent = count > 0
+      ? `${count} open position${count > 1 ? "s" : ""} · Float P&L: ${pnlStr}`
+      : "Connected via cloud · No open positions right now.";
+    msgEl.hidden = false;
+  }
+
+  // Update dashboard PnL card with floating PnL
+  renderMt5TradePreview();
+}
+
+// ── Background EA polling (kept for non-MetaApi fallback) ────────────────────
 
 function startEaStatusPolling() {
   clearInterval(eaStatusPollTimer);
+  // If MetaApi is connected, use the real-time SSE stream instead
+  if (currentUser?.hasMetaApi) {
+    startMt5Stream();
+    return;
+  }
   if (!authToken) return;
-  // Immediate first check
   apiRequest("/mt5/ea-status").then(renderEaStatus).catch(() => {});
-  // Then every 30s silently
   eaStatusPollTimer = setInterval(() => {
     if (!authToken) { clearInterval(eaStatusPollTimer); return; }
     apiRequest("/mt5/ea-status").then(data => {
