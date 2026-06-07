@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SwanXm Trade Book | Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css?v=20260606-pnlresponsive" />
+  <link rel="stylesheet" href="/light-mode-premium.css?v=20260606-pnlresponsive" />
+</head>
+<body class="sxm-body">
+  <div class="bg"></div><div class="grid"></div><div class="light-rays"></div>
+
+  <main class="sxm-auth" data-auth-gate>
+    <section class="sxm-auth-hero">
+      <div class="sxm-logo-lockup">
+        <img src="/assets/swanxm-logo.png" alt="SwanXm logo">
+        <div>
+          <strong>SwanXm</strong>
+          <span>Trade Book</span>
+        </div>
+      </div>
+      <div class="tag"><span class="pulse"></span> Secure trade journaling</div>
+      <h1>SwanXm <span class="gradient-text">Trade Book.</span></h1>
+      <p class="lead">Manual journaling, MT5 trade sync, performance analytics, market tools, reports, and premium trading workflow after verified email and password login.</p>
+      <div class="auth-proof-grid">
+        <div><strong>Manual</strong><span>Journal</span></div>
+        <div><strong>MT5</strong><span>Sync</span></div>
+        <div><strong>AI</strong><span>Reports</span></div>
+      </div>
+    </section>
+
+    <section class="sxm-auth-card">
+      <div class="auth-switch">
+        <button type="button" data-auth-switch="login" class="active">Login</button>
+        <button type="button" data-auth-switch="signup">Sign Up</button>
+      </div>
+
+      <p data-portal-message class="form-message"></p>
+
+      <form class="auth-form active" data-auth-form="login" data-login-form>
+        <div class="field"><label>Email</label><input name="email" type="email" placeholder="you@example.com" required /></div>
+        <div class="field"><label>Password</label><div class="password-field"><input name="password" type="password" placeholder="Enter password" required /><button type="button" data-toggle-password aria-label="Show password">Show</button></div></div>
+        <div class="forgot-link-row"><button type="button" class="link-btn" data-auth-switch="forgot">Forgot password?</button></div>
+        <button class="pill-btn" type="submit">Login To Dashboard</button>
+      </form>
+
+      <form class="auth-form" data-auth-form="signup" data-signup-form>
+        <div class="field"><label>Name</label><input name="name" type="text" placeholder="Your full name" required /></div>
+        <div class="field"><label>Email</label><input name="email" type="email" placeholder="you@example.com" required /></div>
+        <div class="field"><label>Mobile Number</label><input name="mobile" type="tel" inputmode="tel" placeholder="+91 98765 43210" required /></div>
+        <div class="field"><label>Password</label><div class="password-field"><input name="password" type="password" minlength="6" placeholder="Create password" required /><button type="button" data-toggle-password aria-label="Show password">Show</button></div></div>
+        <div class="field"><label>Re-enter Password</label><div class="password-field"><input name="confirmPassword" type="password" minlength="6" placeholder="Confirm password" required /><button type="button" data-toggle-password aria-label="Show password">Show</button></div></div>
+        <input type="hidden" id="selectedPlan" name="plan" value="Free" />
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;margin:8px 0 4px;padding:12px;background:rgba(53,255,168,.06);border:1px solid rgba(53,255,168,.18);border-radius:10px">
+          <input type="checkbox" name="termsAccepted" required style="margin-top:3px;accent-color:#35ffa8;width:16px;height:16px;flex-shrink:0" />
+          <span style="font-size:0.83rem;line-height:1.55;opacity:.9">I have read and agree to the <a href="/terms.html" target="_blank" style="color:#35ffa8;font-weight:600">Terms &amp; Conditions</a> and <a href="/terms.html#privacy" target="_blank" style="color:#35ffa8;font-weight:600">Privacy Policy</a>. I authorise SwanXm Trade Book to securely receive and process my MetaTrader 5 trade data on my behalf for the purpose of trade journaling and analytics.</span>
+        </label>
+        <button class="pill-btn" type="submit">Create SwanXm Account</button>
+      </form>
+
+      <form class="auth-form" data-auth-form="forgot" data-forgot-form>
+        <div class="field"><label>Email</label><input name="email" type="email" placeholder="you@example.com" required /></div>
+        <div class="field"><label>Mobile Number (used at signup)</label><input name="mobile" type="tel" inputmode="tel" placeholder="+91 98765 43210" required /></div>
+        <button class="pill-btn" type="submit">Verify &amp; Continue</button>
+        <div class="forgot-link-row"><button type="button" class="link-btn" data-auth-switch="login">Back to login</button></div>
+      </form>
+
+      <form class="auth-form" data-auth-form="reset" data-reset-form>
+        <input type="hidden" name="resetToken" data-reset-token />
+        <div class="field"><label>New Password</label><div class="password-field"><input name="password" type="password" minlength="6" placeholder="New password" required /><button type="button" data-toggle-password aria-label="Show password">Show</button></div></div>
+        <div class="field"><label>Confirm New Password</label><div class="password-field"><input name="confirmPassword" type="password" minlength="6" placeholder="Confirm new password" required /><button type="button" data-toggle-password aria-label="Show password">Show</button></div></div>
+        <button class="pill-btn" type="submit">Save New Password</button>
+        <div class="forgot-link-row"><button type="button" class="link-btn" data-auth-switch="login">Back to login</button></div>
+      </form>
+    </section>
+  </main>
+
+  <main class="sxm-app" data-app-workspace hidden>
+    <aside class="sxm-sidebar">
+      <a class="sxm-brand" href="/index.html">
+        <img src="/assets/swanxm-logo.png" alt="SwanXm logo">
+        <div><strong>SwanXm</strong><span>Trade Book</span></div>
+        <em>BETA</em>
+      </a>
+
+      <div class="sxm-user-card">
+        <img src="/assets/swanxm-logo.png" alt="User logo">
+        <div><strong data-current-user>SwanXm Trader</strong><span data-current-email>verified@email.com</span></div>
+        <small data-current-plan>FREE</small>
+      </div>
+
+      <nav class="sxm-menu" data-app-tabs>
+        <p>Menu</p>
+        <button class="active" data-app-tab="dashboard" type="button">Dashboard</button>
+        <button data-app-tab="trades" type="button">Trades</button>
+        <button data-app-tab="journal" type="button">Journal</button>
+        <button class="nav-group-toggle" data-nav-group-toggle="analysis" aria-expanded="false" type="button">
+          <span>Analysis</span>
+          <i aria-hidden="true"></i>
+        </button>
+        <div class="nav-submenu" data-nav-group="analysis" hidden>
+          <button class="nav-child" data-app-tab="performance" type="button">Performance</button>
+          <button class="nav-child" data-app-tab="trade-analysis" type="button">Trade Analysis</button>
+        </div>
+        <button data-app-tab="market" type="button">Market</button>
+        <button class="pro-nav" data-app-tab="ai-report" type="button">AI Report</button>
+        <button class="elite-nav" data-app-tab="backtesting" type="button">Backtesting</button>
+        <button class="nav-group-toggle" data-nav-group-toggle="traders-lounge" aria-expanded="false" type="button">
+          <span>Trader's Lounge</span>
+          <i aria-hidden="true"></i>
+        </button>
+        <div class="nav-submenu" data-nav-group="traders-lounge" hidden>
+          <button class="nav-child elite-nav" data-app-tab="lounge" type="button">Lounge</button>
+          <button class="nav-child" data-app-tab="leaderboard" type="button">Leaderboard</button>
+        </div>
+        <button data-app-tab="tools" type="button">Tools</button>
+        <p>Support</p>
+        <button data-app-tab="settings" type="button">Settings</button>
+        <button data-app-tab="help" type="button">Help & Support</button>
+        <button data-app-tab="subscription" type="button">Subscription</button>
+      </nav>
+    </aside>
+
+    <section class="sxm-content">
+      <header class="sxm-topbar">
+        <div><h2 data-page-title>Dashboard</h2><span data-today-label>Tue, Jun 2</span></div>
+        <div class="sxm-search"><span>Search trades, symbols, notes...</span><kbd>Ctrl+K</kbd></div>
+        <div class="sxm-top-actions">
+          <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light mode"><span data-theme-icon>☾</span></button>
+          <button class="plus" type="button" data-app-tab-jump="journal">+</button>
+          <div class="clock" data-clock>--:--:--</div>
+          <button class="avatar-btn" type="button"><img src="/assets/swanxm-logo.png" alt=""></button>
+          <button class="ghost-btn" data-logout type="button">Logout</button>
+        </div>
+      </header>
+      <div class="app-status" data-app-status hidden></div>
+
+      <section class="sxm-page active" data-app-panel="dashboard">
+        <div class="dashboard-command">
+          <div>
+            <span>SwanXm Trade Book</span>
+            <h1>Trading Command Center</h1>
+            <p>Track manual XAUUSD trades, monitor equity, and review your strongest sessions from one focused workspace.</p>
+          </div>
+          <div class="dashboard-actions">
+            <button class="pill-btn" data-app-tab-jump="journal" type="button">Add Trade</button>
+            <button class="ghost-btn" data-app-tab-jump="tools" type="button">Open Tools</button>
+            <button class="ghost-btn" data-app-tab-jump="mt5" type="button">Connect MT5</button>
+          </div>
+        </div>
+
+        <div class="sxm-kpis">
+          <div class="sxm-kpi kpi-profit"><span>Total P&L</span><strong data-dashboard-total-pnl>$0.00</strong><em data-dashboard-total-detail>Realized $0.00 + open $0.00</em></div>
+          <div class="sxm-kpi kpi-realized"><span>Realized P&L</span><strong data-realized-pnl>$0.00</strong><em data-realized-detail>0 closed trades</em></div>
+          <div class="sxm-kpi kpi-unrealized"><span>Unrealized P&L</span><strong data-unrealized-pnl>$0.00</strong><em data-unrealized-detail>No live MT5 positions</em></div>
+          <div class="sxm-kpi kpi-win"><span>Win Rate</span><strong data-dashboard-win-rate>0%</strong><div class="mini-progress"><i data-dashboard-win-rate-bar></i></div><em data-dashboard-win-detail>0 wins from 0 closed trades</em></div>
+        </div>
+        <div class="sxm-dashboard-grid">
+          <div class="sxm-card wide performance-card"><div class="card-row"><div><span>Performance</span><h3 data-total-pnl>$0.00</h3></div><div class="performance-chip"><span>Real-time equity</span><strong><b data-trade-count>0</b> trades tracked</strong></div></div><div class="sxm-chart" data-equity-bars></div></div>
+          <div class="sxm-card monthly-card">
+            <div class="card-row monthly-card-head">
+              <div>
+                <span data-calendar-month-label>Current Month</span>
+                <h3>Monthly P&L</h3>
+              </div>
+              <div class="month-control" aria-label="Monthly P&L month selector">
+                <button type="button" data-calendar-prev aria-label="Previous month">&lsaquo;</button>
+                <strong data-calendar-month-label>June 2026</strong>
+                <button type="button" data-calendar-next aria-label="Next month">&rsaquo;</button>
+                <input type="month" data-calendar-month aria-label="Choose month">
+              </div>
+            </div>
+            <div class="monthly-summary">
+              <div><span>Month Total</span><strong data-calendar-month-total>$0.00</strong></div>
+              <div><span>Trades</span><strong data-calendar-month-count>0</strong></div>
+            </div>
+            <div class="calendar-grid" data-calendar-grid></div>
+          </div>
+          <div class="sxm-card dashboard-open-positions-card" data-dashboard-open-positions-card>
+            <div class="card-row">
+              <div>
+                <span>Live Exposure</span>
+                <h3>Open Positions</h3>
+              </div>
+              <div class="performance-chip">
+                <span>MT5</span>
+                <strong data-open-positions>No open positions</strong>
+              </div>
+            </div>
+            <div class="notice" data-dashboard-open-notice>No open positions. Connect MT5 to sync live trades.</div>
+            <div class="dashboard-open-positions-list" data-dashboard-open-positions-list></div>
+          </div>
+          <div class="sxm-card wide dashboard-workflow">
+            <div class="workflow-head">
+              <div><span>Daily Process</span><h3>Trading Workflow</h3></div>
+              <em>Manual journal mode</em>
+            </div>
+            <div class="workflow-steps">
+              <button data-app-tab-jump="journal" type="button"><span>01</span><div><strong>Record Trade</strong><em>Capture XAUUSD entry, exit, lot size, session, and notes.</em></div></button>
+              <button data-app-tab-jump="performance" type="button"><span>02</span><div><strong>Review Edge</strong><em>Study equity curve, best trading day, session, and strategy quality.</em></div></button>
+              <button data-app-tab-jump="tools" type="button"><span>03</span><div><strong>Plan Next Setup</strong><em>Use lot sizing and IST market hours before the next trade.</em></div></button>
+            </div>
+            <div class="workflow-footer"><span>Next best action</span><button class="ghost-btn" data-app-tab-jump="journal" type="button">Open Journal</button></div>
+          </div>
+          <div class="sxm-card wide dashboard-trades-card">
+            <div class="card-row">
+              <div>
+                <span>Recent Trades</span>
+                <h3>Trade History</h3>
+              </div>
+              <div class="performance-chip">
+                <span>Latest</span>
+                <strong><b data-dashboard-trade-count>0</b> trades</strong>
+              </div>
+            </div>
+            <div class="notice" data-dashboard-trades-notice hidden>No trades yet. Start by adding a manual trade or connecting MT5.</div>
+            <div class="dashboard-trades-list" data-dashboard-trades-list></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sxm-page" data-app-panel="trades">
+        <div class="trades-command">
+          <div><span>Execution Ledger</span><h1>Trade History</h1><p>MT5 trades appear here after you select an account and click Sync MT5 Trades. Manual trades stay visible for the logged-in user.</p></div>
+          <div class="trade-action-stack"><button class="pill-btn" data-app-tab-jump="journal" type="button">Add Trade</button><button class="ghost-btn" data-app-tab-jump="mt5" type="button">Connect MT4/MT5</button><button class="ghost-btn" data-export-csv type="button">Export CSV</button><button class="ghost-btn danger" data-clear-trades type="button">Clear All</button></div>
+        </div>
+        <div class="sxm-card live-trades-card" data-live-trades-card hidden>
+          <div class="card-row">
+            <div>
+              <span>Real-time Monitor</span>
+              <h3>Live MT5 Positions</h3>
+            </div>
+            <div class="performance-chip">
+              <span>Active</span>
+              <strong><b data-live-trades-count>0</b> trades</strong>
+            </div>
+          </div>
+          <div class="live-trades-list" data-live-trades-list></div>
+        </div>
+        <div class="sxm-card trade-history-card"><div class="card-row"><div><span>MT5 + Journal</span><h3>Trades</h3></div><div class="performance-chip"><span>Saved</span><strong><b data-trade-count>0</b> trades</strong></div></div><div class="notice" data-plan-limit-notice hidden>Free plan keeps your latest 10 manual trades. Adding trade 11 removes the oldest trade.</div><div class="notice" data-trades-notice hidden>Free plan keeps the latest 10 manual trades. Pro unlocks unlimited manual history and MT5 sync.</div><div class="trade-table-shell"><table class="trade-table" data-trade-table hidden><thead><tr><th>Close (GMT+0)</th><th>Symbol</th><th>Session</th><th>Strategy</th><th>P&L</th><th>Source</th></tr></thead><tbody data-trade-rows></tbody></table><div class="empty-state premium-empty" data-empty-trades>No trades yet. Connect MT5 or add your first trade from Journal.</div></div></div>
+      </section>
+
+      <section class="sxm-page" data-app-panel="journal">
+        <div class="journal-command"><div><span>Manual Trade Desk</span><h1>Journal Entry</h1><p>Record the trade exactly once. SwanXm calculates P&L from movement, lot size, and direction.</p></div><div class="performance-chip"><span>Formula</span><strong>Move x lot x 100</strong></div></div>
+        <form class="sxm-card trade-form luxury-journal-form" data-trade-form>
+          <div class="form-section-title"><span>Trade Setup</span><strong>XAUUSD Manual Journal</strong></div>
+          <div class="form-grid">
+            <div class="field"><label>Symbol</label><select name="symbol" required><option value="XAUUSD">XAUUSD</option></select></div>
+            <div class="field"><label>Date</label><input name="date" type="date" required></div>
+            <div class="field"><label>Session</label><select name="session"><option>London</option><option>New York</option><option>Overlap</option><option>Asia</option></select></div>
+            <div class="field"><label>Strategy</label><select name="strategy"><option>Liquidity Sweep</option><option>Breakout</option><option>Pullback</option><option>News Reaction</option></select></div>
+            <div class="field"><label>Direction</label><select name="direction"><option>Long</option><option>Short</option></select></div>
+            <div class="field"><label>Entry</label><input name="entry" type="number" step="0.01" placeholder="4828.09" required></div>
+            <div class="field"><label>Exit</label><input name="exit" type="number" step="0.01" placeholder="4830.19" required></div>
+            <div class="field"><label>Lot Size</label><input name="lotSize" type="number" min="0.01" step="0.01" placeholder="0.01" required></div>
+            <div class="calculated-pnl"><span>Calculated P&L</span><strong data-calculated-pnl>$0.00</strong></div>
+          </div>
+          <div class="form-section-title muted"><span>Trade Reflection</span><strong>Execution note</strong></div>
+          <div class="field"><label>Trade Note</label><textarea name="note" placeholder="Entry reason, emotion, mistake, screenshot note..."></textarea></div>
+          <div class="journal-submit-row"><span>Saved trades appear instantly in Trades and Performance.</span><button class="pill-btn" type="submit">Save Trade</button></div>
+        </form>
+      </section>
+
+      <section class="sxm-page" data-app-panel="performance">
+        <div class="analytics-command">
+          <div><span>Performance Intelligence</span><h1>Performance Workspace</h1><p>Convert your saved trades into session, strategy, equity, and day-performance decisions.</p></div>
+          <div class="analytics-pills"><b>Button MT5 sync</b><b>Sessions: GMT+0</b><b>Live equity</b></div>
+        </div>
+        <div class="empty-state analytics-empty" data-analytics-empty>No performance data yet. Add a manual trade or click Sync MT5 Trades after selecting an account.</div>
+        <div data-analytics-content hidden>
+          <div class="sxm-kpis analysis-kpis"><div class="sxm-kpi blue"><span>Total P&L</span><strong data-total-pnl>$0.00</strong></div><div class="sxm-kpi"><span>Win Rate</span><strong data-win-rate>0%</strong></div><div class="sxm-kpi"><span>Profit Factor</span><strong data-profit-factor>0.00</strong></div><div class="sxm-kpi"><span>Expectancy</span><strong data-expectancy>$0.00</strong></div></div>
+          <div class="analytics-layout"><div class="sxm-card analytics-summary"><h3>Quick Stats</h3><div class="quick-grid"><div><span>Avg Winner</span><strong data-avg-win>$0.00</strong></div><div><span>Avg Loser</span><strong data-avg-loss>$0.00</strong></div><div><span>Best Trade</span><strong data-biggest-win>$0.00</strong></div><div><span>Worst Trade</span><strong data-biggest-loss>$0.00</strong></div><div><span>Best Trading Day</span><strong data-best-profit-day>-</strong></div><div><span>Worst Trading Day</span><strong data-worst-profit-day>-</strong></div></div></div><div class="sxm-card wide analytics-equity"><div class="card-row"><h3>Equity Curve</h3><span>Real-time cumulative P&L</span></div><div class="sxm-chart" data-equity-bars></div></div><div class="sxm-card"><h3>Day Performance</h3><div class="ranking-list" data-day-ranking></div></div><div class="sxm-card"><h3>Top Symbols</h3><div class="ranking-list" data-symbol-ranking></div></div></div>
+        </div>
+      </section>
+
+      <section class="sxm-page" data-app-panel="trade-analysis">
+        <div class="sxm-page-head"><div><h1>Trade Analysis</h1><span>Review individual wins and losses</span></div></div>
+        <div class="trade-analysis-layout"><div class="sxm-card"><h3>Trades</h3><div class="trade-list" data-trade-list></div></div><div class="sxm-card wide"><h3 data-selected-trade-title>Select a trade</h3><div class="selected-trade" data-selected-trade>Choose a trade from the list to inspect entry, exit, P&L and notes.</div></div></div>
+      </section>
+
+      <section class="sxm-page" data-app-panel="market">
+        <div class="market-command">
+          <div>
+            <span>Market Intelligence</span>
+            <h1>Economic Calendar</h1>
+            <p>Track all scheduled market news in a dense Forex Factory-style workflow for planning XAUUSD sessions.</p>
+          </div>
+          <div class="market-clock-card">
+            <span>Updated</span>
+            <strong data-market-updated>--:--</strong>
+            <em>IST view</em>
+          </div>
+        </div>
+
+        <div class="market-summary-strip">
+          <div><span>Total News</span><strong data-market-count>0</strong></div>
+          <div><span>High Impact</span><strong data-market-high-count>0</strong></div>
+          <div><span>Next Event</span><strong data-market-next>Waiting</strong></div>
+        </div>
+
+        <div class="market-calendar-shell">
+          <div class="market-toolbar">
+            <div class="market-tabs" aria-label="Calendar range">
+              <button class="active" data-market-range="all" type="button">All News</button>
+              <button data-market-range="today" type="button">Today</button>
+              <button data-market-range="tomorrow" type="button">Tomorrow</button>
+              <button data-market-range="week" type="button">This Week</button>
+              <button data-market-range="next-week" type="button">Next Week</button>
+            </div>
+            <div class="market-filter-row">
+              <div class="impact-filter" aria-label="Impact filter">
+                <button class="active" data-market-impact="all" type="button">All</button>
+                <button data-market-impact="high" type="button"><i class="impact-dot high"></i>High</button>
+                <button data-market-impact="medium" type="button"><i class="impact-dot medium"></i>Medium</button>
+                <button data-market-impact="low" type="button"><i class="impact-dot low"></i>Low</button>
+              </div>
+              <label class="market-date-picker">
+                <span>Calendar</span>
+                <input data-market-date type="date">
+              </label>
+              <label class="market-select">
+                <span>Currency</span>
+                <select data-market-currency>
+                  <option value="all">All currencies</option>
+                  <option value="USD">USD</option>
+                  <option value="EUR">EUR</option>
+                  <option value="GBP">GBP</option>
+                  <option value="JPY">JPY</option>
+                  <option value="AUD">AUD</option>
+                  <option value="CAD">CAD</option>
+                  <option value="CHF">CHF</option>
+                  <option value="CNY">CNY</option>
+                </select>
+              </label>
+              <label class="market-search">
+                <span>Search</span>
+                <input data-market-search type="search" placeholder="Search news, currency, impact...">
+              </label>
+            </div>
+          </div>
+
+          <div class="market-calendar-card">
+            <div class="market-table-head">
+              <span>Time</span>
+              <span>Currency</span>
+              <span>Impact</span>
+              <span>Event</span>
+              <span>Actual</span>
+              <span>Forecast</span>
+              <span>Previous</span>
+            </div>
+            <div class="market-event-list" data-economic-calendar></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sxm-page" data-app-panel="ai-report">
+        <div class="sxm-card ai-report-card">
+          <div class="card-row"><div><span>Gemini AI Workspace</span><h1>AI Report</h1><p>Gemini reads your saved performance data and turns it into a practical trade review, risk focus, and next-session questions.</p></div><div class="performance-chip"><span>Access</span><strong data-ai-plan-chip>Pro / Elite</strong></div></div>
+          <div class="notice">This AI panel uses your real saved trade history from SwanXm Trade Book. Deposits and cash movements are excluded from performance analysis.</div>
+          <div class="notice amber" data-plan-lock="ai">Gemini AI Report is locked on Free. Switch to Pro or Elite from Subscription to generate AI answers from your performance data.</div>
+          <div class="analytics-layout" data-ai-premium-content>
+            <div class="notice wide ai-source-note" data-ai-source>Gemini will analyze your saved performance after your trades load.</div>
+            <div class="sxm-card"><h3>AI Summary</h3><p data-ai-report-summary>Load your trades to generate the first AI report.</p></div>
+            <div class="sxm-card"><h3>Risk Focus</h3><ul data-ai-risk-list class="ranking-list"></ul></div>
+            <div class="sxm-card wide"><h3>Suggested Questions</h3><ul data-ai-questions class="ranking-list"></ul></div>
+            <div class="sxm-card wide"><h3>AI Agent Chat</h3>
+              <div class="notice">Ask questions like "What is my win rate?" or "What should I focus on next?" and Gemini will answer from your saved trades.</div>
+              <div class="ai-agent-shell">
+                <div class="ai-agent-header"><span>Gemini Trading Assistant</span><strong>Structured - Trade-aware - Performance based</strong></div>
+                <div class="ai-agent-chat" data-ai-chat-messages></div>
+                <form class="ai-agent-form" data-ai-agent-form>
+                  <input type="text" data-ai-agent-input placeholder="Ask the AI agent about your trades..." autocomplete="off">
+                  <button class="pill-btn" data-ai-agent-submit type="submit">Ask Gemini</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="sxm-page" data-app-panel="backtesting"><div class="sxm-card center-card elite-locked"><span>Elite Feature</span><h1>Backtesting</h1><p>Replay setups, validate strategies, compare historical outcomes, and build rule-based playbooks in the Elite version.</p><div class="notice amber">Locked. Upgrade to Elite to unlock Backtesting.</div><button class="pill-btn" data-app-tab-jump="subscription" type="button">View Elite Plan</button></div></section>
+      <section class="sxm-page" data-app-panel="lounge"><div class="sxm-card center-card elite-locked"><span>Elite Feature</span><h1>Lounge</h1><p>Elite traders can access private rooms, mentor discussions, community insights, and curated market commentary.</p><div class="notice amber">Locked. Upgrade to Elite to unlock Lounge.</div><button class="pill-btn" data-app-tab-jump="subscription" type="button">View Elite Plan</button></div></section>
+      <section class="sxm-page" data-app-panel="leaderboard"><div class="sxm-card center-card"><h1>Leaderboard</h1><p>Rank traders by verified SwanXm Trade Book performance once public profiles are enabled.</p></div></section>
+      <section class="sxm-page" data-app-panel="tools">
+        <div class="tools-home" data-tools-home>
+          <div class="sxm-page-head"><div><h1>Trading Tools</h1><span>Position size calculator, IST market hours, and Pro tools</span></div></div>
+          <div class="tool-grid">
+            <button class="sxm-card tool-card" data-tool-open="xau-calculator" type="button"><span>AI Assist</span><h3>Position Size Calculator</h3><p>Calculate suggested XAUUSD lot size from balance, risk, and stop-loss distance.</p></button>
+            <button class="sxm-card tool-card" data-tool-open="market-hours" type="button"><span>IST</span><h3>Forex Market Hours</h3><p>See Sydney, Tokyo, London, and New York sessions in India time.</p></button>
+            <button class="sxm-card tool-card locked" data-tool-open="trader-pov" type="button"><span>PRO</span><h3>Trader POV</h3><p>Read-only mentor dashboard view. Locked in the Pro version.</p></button>
+          </div>
+        </div>
+
+        <div class="tool-panel" data-tool-panel="xau-calculator" hidden>
+          <div class="tool-interface-head">
+            <button class="ghost-btn" data-tools-back type="button">Back to Tools</button>
+            <div><span>Risk Engine</span><h2>Position Size Calculator</h2><p>Calculate XAUUSD lot size from account balance, risk percentage, stop loss pips, and pip value.</p></div>
+          </div>
+          <div class="position-size-shell">
+            <div class="position-params">
+              <div class="position-input-card">
+                <div class="position-section-label"><span class="tool-icon-card">A</span><strong>Account Balance</strong></div>
+                <div class="money-input"><span>$</span><input data-lot-balance type="number" min="0" step="1" value="400" placeholder="400"></div>
+                <p>Enter your trading account balance.</p>
+              </div>
+
+              <div class="position-input-card">
+                <div class="position-section-label"><span class="tool-icon-card">R</span><strong>Risk Percentage</strong></div>
+                <div class="risk-readout"><strong><b data-risk-percent-display>2</b>%</strong><span data-risk-amount>$8.00</span></div>
+                <input class="risk-slider" data-lot-risk-range type="range" min="0.1" max="5" step="0.1" value="2">
+                <input data-lot-risk-percent type="number" min="0.1" max="25" step="0.1" value="2" hidden>
+                <div class="risk-scale"><span>Conservative</span><span>Moderate</span><span>Aggressive</span></div>
+                <div class="risk-presets">
+                  <button data-risk-preset="0.5" type="button">0.5%</button>
+                  <button data-risk-preset="1" type="button">1%</button>
+                  <button class="active" data-risk-preset="2" type="button">2%</button>
+                  <button data-risk-preset="3" type="button">3%</button>
+                  <button data-risk-preset="5" type="button">5%</button>
+                </div>
+              </div>
+
+              <div class="position-input-card">
+                <div class="position-section-label"><span class="tool-icon-card">S</span><strong>Stop Loss Distance</strong></div>
+                <div class="suffix-input"><input data-lot-stop-pips type="number" min="0.1" step="0.1" value="50" placeholder="50"><span>pips</span></div>
+                <p>Distance from entry to stop loss in pips.</p>
+              </div>
+
+              <div class="position-input-card">
+                <div class="position-section-label"><span class="tool-icon-card">X</span><strong>Trading Instrument</strong></div>
+                <select data-lot-symbol>
+                  <option value="XAUUSD" selected>XAUUSD</option>
+                </select>
+                <div class="instrument-meta"><span>Pip Value: <b data-pip-value-label>$10/lot</b></span><span>Pip Size: <b>0.01</b></span></div>
+                <label class="custom-pip-toggle"><input data-custom-pip-toggle type="checkbox"> Use custom pip value</label>
+                <div class="custom-pip-field" data-custom-pip-field hidden>
+                  <label>Pip Value for 1 Lot</label>
+                  <input data-lot-pip-value type="number" min="0.01" step="0.01" value="10">
+                </div>
+              </div>
+
+              <div class="position-actions">
+                <button class="pill-btn" data-lot-calculate type="button">Calculate Position Size</button>
+                <button class="ghost-btn" data-lot-reset type="button">Reset</button>
+              </div>
+            </div>
+
+            <aside class="position-result-card" data-lot-result-card>
+              <div class="result-icon">FX</div>
+              <div class="result-empty" data-lot-empty>
+                <h3>Enter Your Parameters</h3>
+                <p>Fill in account balance, risk percentage, and stop loss to calculate your optimal position size.</p>
+              </div>
+              <div class="result-ready" data-lot-ready hidden>
+                <div class="recommended-size-card">
+                  <span>Recommended Position Size</span>
+                  <strong><b data-lot-result>0.02</b> <em>Standard Lots</em></strong>
+                  <p data-lot-risk-line>Based on 2% risk ($8.00)</p>
+                </div>
+                <div class="lot-breakdown-grid">
+                  <div><span>Mini Lots</span><strong data-lot-mini>0.16</strong><em>10,000 units</em></div>
+                  <div><span>Micro Lots</span><strong data-lot-micro>1.6</strong><em>1,000 units</em></div>
+                  <div><span>Risk Amount</span><strong data-risk-amount>$8.00</strong><em data-risk-percent-note>2% of balance</em></div>
+                  <div class="loss-box"><span>Loss at Stop</span><strong data-lot-loss-stop>$8.00</strong><em>If SL is hit</em></div>
+                </div>
+                <div class="trade-summary-card">
+                  <h4>Trade Summary</h4>
+                  <div><span>Account Balance</span><strong data-lot-balance-summary>$400.00</strong></div>
+                  <div><span>Symbol</span><strong data-lot-symbol-summary>XAUUSD</strong></div>
+                  <div><span>Stop Loss</span><strong data-stop-pips-result>50 pips</strong></div>
+                  <div><span>Pip Value</span><strong data-pip-value-result>$10/pip/lot</strong></div>
+                </div>
+                <div class="formula-card">
+                  <span>How is this calculated?</span>
+                  <h4>Forex Position Size Formula:</h4>
+                  <code>Position Size = Risk Amount / (Stop Loss x Pip Value)</code>
+                  <p data-lot-ai-note>= $8.00 / (50 x $10) = 0.02 lots</p>
+                </div>
+              </div>
+              <div class="position-tips">
+                <div>Most professionals risk 1-2% per trade</div>
+                <div>Always define your stop loss before entering</div>
+                <div>Position sizing protects long-term survival</div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <div class="tool-panel" data-tool-panel="market-hours" hidden>
+          <div class="tool-interface-head">
+            <button class="ghost-btn" data-tools-back type="button">Back to Tools</button>
+            <div><span>Session Clock</span><h2>Forex Market Hours</h2><p>Track Sydney, Tokyo, London, and New York sessions in India Standard Time.</p></div>
+          </div>
+          <div class="sxm-card">
+            <div class="card-row"><div><span>India Standard Time</span><h3>Forex Market Hours</h3></div><div class="performance-chip"><span>Timezone</span><strong>IST UTC+5:30</strong></div></div>
+            <div class="session-grid">
+              <div data-session-card data-start="150" data-end="690"><span>Sydney</span><strong>02:30 AM - 11:30 AM</strong><em>Early liquidity</em></div>
+              <div data-session-card data-start="330" data-end="870"><span>Tokyo</span><strong>05:30 AM - 02:30 PM</strong><em>Asia session</em></div>
+              <div data-session-card data-start="750" data-end="1290"><span>London</span><strong>12:30 PM - 09:30 PM</strong><em>High volume</em></div>
+              <div data-session-card data-start="1050" data-end="150"><span>New York</span><strong>05:30 PM - 02:30 AM</strong><em>US volatility</em></div>
+            </div>
+            <div class="notice">Best XAUUSD activity is usually during London and New York overlap. Times shown in IST.</div>
+          </div>
+        </div>
+
+        <div class="tool-panel" data-tool-panel="trader-pov" hidden>
+          <div class="tool-interface-head">
+            <button class="ghost-btn" data-tools-back type="button">Back to Tools</button>
+            <div><span>Pro Workspace</span><h2>Trader POV</h2><p>Read-only mentor dashboard view for Pro members.</p></div>
+          </div>
+          <div class="sxm-card center-card locked-panel"><h1>Trader POV</h1><p>View another trader's dashboard, equity curve, trade notes, and performance breakdown in read-only mode.</p><div class="notice amber">Locked. Upgrade to Pro to unlock Trader POV.</div><button class="pill-btn" data-app-tab-jump="subscription" type="button">View Pro Plan</button></div>
+        </div>
+      </section>
+      <section class="sxm-page" data-app-panel="settings">
+        <div class="settings-command">
+          <div><span>Account Control</span><h1>Settings</h1><p>Manage your profile, journal defaults, workspace theme, and privacy preferences for SwanXm Trade Book.</p></div>
+          <div class="settings-save-state" data-settings-save-state>Saved locally</div>
+        </div>
+
+        <div class="settings-layout">
+          <div class="sxm-card settings-profile-card">
+            <div class="settings-hero">
+              <img src="/assets/swanxm-logo.png" alt="">
+              <div>
+                <span>Verified trader workspace</span>
+                <h2 data-current-user>SwanXm Trader</h2>
+                <p data-current-email>verified@email.com</p>
+              </div>
+            </div>
+            <div class="settings-metrics">
+              <div><span>Plan</span><strong data-current-plan>FREE</strong></div>
+              <div><span>Saved Trades</span><strong data-trade-count>0</strong></div>
+              <div><span>Theme</span><strong data-settings-theme-label>Dark</strong></div>
+            </div>
+          </div>
+
+          <div class="sxm-card settings-panel" id="account-settings-card">
+            <div class="settings-panel-head"><div><span>Account</span><h3>Update Details</h3></div><em data-profile-save-state></em></div>
+            <form class="form-grid" data-profile-form autocomplete="off">
+              <div class="field"><label>Full Name</label><input name="name" type="text" placeholder="Your full name" data-profile-name required /></div>
+              <div class="field"><label>Email</label><input name="email" type="email" placeholder="you@example.com" data-profile-email required /></div>
+              <div class="field"><label>Mobile Number</label><input name="mobile" type="tel" inputmode="tel" placeholder="+91 98765 43210" data-profile-mobile required /></div>
+              <div class="field"><label>Current Password <em style="font-weight:400;opacity:.6">(required)</em></label><div class="password-field"><input name="currentPassword" type="password" placeholder="Enter current password" required /><button type="button" data-toggle-password aria-label="Show password">Show</button></div></div>
+              <div class="field"><label>New Password <em style="font-weight:400;opacity:.6">(leave blank to keep)</em></label><div class="password-field"><input name="newPassword" type="password" minlength="6" placeholder="New password (optional)" /><button type="button" data-toggle-password aria-label="Show password">Show</button></div></div>
+              <div class="field"><label>Confirm New Password</label><div class="password-field"><input name="confirmPassword" type="password" minlength="6" placeholder="Confirm new password" /><button type="button" data-toggle-password aria-label="Show password">Show</button></div></div>
+              <div class="journal-submit-row" style="grid-column:1/-1"><span data-profile-message class="form-message"></span><button class="pill-btn" type="submit">Save Changes</button></div>
+            </form>
+          </div>
+
+          <div class="sxm-card settings-panel">
+            <div class="settings-panel-head"><div><span>Profile</span><h3>Account Identity</h3></div><em>Email login secured</em></div>
+            <div class="form-grid">
+              <div class="field"><label>Display Name</label><input data-setting-field="displayName" placeholder="SwanXm Trader"></div>
+              <div class="field"><label>Email</label><input data-settings-email readonly value="verified@email.com"></div>
+              <div class="field"><label>Public Handle</label><input data-setting-field="handle" placeholder="@swanxmtrader"></div>
+              <div class="field"><label>Profile Note</label><input data-setting-field="profileNote" placeholder="XAUUSD intraday journal"></div>
+            </div>
+          </div>
+
+          <div class="sxm-card settings-panel">
+            <div class="settings-panel-head"><div><span>Journal</span><h3>Trading Defaults</h3></div><em>Applied to manual entries</em></div>
+            <div class="form-grid">
+              <div class="field"><label>Default Symbol</label><select data-setting-field="preferredSymbol"><option value="XAUUSD">XAUUSD</option></select></div>
+              <div class="field"><label>Default Session</label><select data-setting-field="defaultSession"><option>London</option><option>New York</option><option>Overlap</option><option>Asia</option></select></div>
+              <div class="field"><label>Default Strategy</label><select data-setting-field="defaultStrategy"><option>Liquidity Sweep</option><option>Breakout</option><option>Pullback</option><option>News Reaction</option></select></div>
+              <div class="field"><label>Display Currency</label><select data-setting-field="currency"><option>USD</option><option>INR</option></select></div>
+            </div>
+          </div>
+
+          <div class="sxm-card settings-panel">
+            <div class="settings-panel-head"><div><span>Display</span><h3>Workspace Appearance</h3></div><em>Dashboard feel</em></div>
+            <div class="settings-segment" data-settings-theme>
+              <button type="button" data-theme-option="dark">Dark</button>
+              <button type="button" data-theme-option="light">Light</button>
+            </div>
+            <div class="settings-toggle-list">
+              <label><div><strong>Smooth interactions</strong><span>Use animated panels, calendar cells, and premium button feedback.</span></div><input type="checkbox" data-setting-toggle="smoothUi" checked></label>
+              <label><div><strong>Compact monthly calendar</strong><span>Use tighter calendar spacing when you want more dashboard density.</span></div><input type="checkbox" data-setting-toggle="compactCalendar"></label>
+            </div>
+          </div>
+
+          <div class="sxm-card settings-panel">
+            <div class="settings-panel-head"><div><span>Privacy</span><h3>Visibility Controls</h3></div><em>Public profile rules</em></div>
+            <div class="settings-toggle-list">
+              <label><div><strong>Profile Visibility</strong><span>Allow your trader profile to appear in public areas later.</span></div><input type="checkbox" data-setting-toggle="profilePublic" checked></label>
+              <label><div><strong>Show on Leaderboard</strong><span>Display your account only when leaderboard access is enabled.</span></div><input type="checkbox" data-setting-toggle="showLeaderboard"></label>
+              <label><div><strong>Show Total P&L</strong><span>Allow cumulative profit/loss to appear on profile views.</span></div><input type="checkbox" data-setting-toggle="showTotalPnl" checked></label>
+              <label><div><strong>Show Win Rate</strong><span>Allow win percentage to appear on profile views.</span></div><input type="checkbox" data-setting-toggle="showWinRate" checked></label>
+            </div>
+          </div>
+
+        </div>
+      </section>
+      <section class="sxm-page" data-app-panel="help"><div class="sxm-card center-card"><h1>Help & Support</h1><p>Contact support@swanxmtradebook.com for account, billing, and sync support.</p><div class="notice">All systems operational</div></div></section>
+      <section class="sxm-page" data-app-panel="subscription">
+        <div class="subscription-command">
+          <div><span>Plan Control</span><h1>Subscription</h1><p>Choose how much journaling power this account should unlock. Free keeps a rolling 10-trade history; Pro and Elite open deeper workflow access.</p></div>
+          <div class="plan-switch" aria-label="Plan switch">
+            <button type="button" data-plan-select="Free">Free Member</button>
+            <button type="button" data-plan-select="Pro">Pro Mode</button>
+            <button type="button" data-plan-select="Elite">Elite Mode</button>
+          </div>
+        </div>
+        <div class="subscription-proof-strip" aria-label="Plan highlights">
+          <div><span>Free cap</span><strong>10 trades</strong><em>Oldest trade rolls off</em></div>
+          <div><span>Pro access</span><strong>Unlimited</strong><em>Manual journal history</em></div>
+          <div><span>MT5 sync</span><strong>Pro/Elite</strong><em>Locked for Free users</em></div>
+        </div>
+        <div class="subscription-grid plan-mode-grid">
+          <div class="sxm-card plan-mode-card" data-plan-tier="Free">
+            <div class="plan-card-head"><span>Starter Access</span><h2>Free</h2><em data-plan-current="Free">Active</em></div>
+            <strong class="plan-price">$0<small>/month</small></strong>
+            <p>Manual journaling for the latest <b data-free-limit>10</b> trades. When the 11th trade is added, the oldest trade is removed automatically.</p>
+            <ul class="plan-feature-list">
+              <li>10 latest manual trades</li>
+              <li>Dashboard and analytics from saved trades</li>
+              <li>MT5 sync locked</li>
+            </ul>
+            <button class="ghost-btn" type="button" data-plan-select="Free">Use Free</button>
+          </div>
+          <div class="sxm-card featured plan-mode-card" data-plan-tier="Pro">
+            <div class="plan-card-head"><span>Recommended</span><h2>Pro</h2><em data-plan-current="Pro" hidden>Active</em></div>
+            <strong class="plan-price">$15<small>/month</small></strong>
+            <p>INR 2,199 - Unlimited manual trade history and deep analytics for active traders.</p>
+            <ul class="plan-feature-list">
+              <li>Unlimited manual trades</li>
+              <li>Advanced reports and strategy insights</li>
+              <li>Pro journaling access</li>
+            </ul>
+            <button class="pill-btn" type="button" data-plan-select="Pro">Switch to Pro</button>
+          </div>
+          <div class="sxm-card plan-mode-card" data-plan-tier="Elite">
+            <div class="plan-card-head"><span>MT5 access</span><h2>Elite</h2><em data-plan-current="Elite" hidden>Active</em></div>
+            <strong class="plan-price">$25<small>/month</small></strong>
+            <p>INR 3,399 - Pro unlocks 1 MT5 account; Elite unlocks up to 5, plus premium analytics and advanced tools.</p>
+            <ul class="plan-feature-list">
+              <li>MT5 sync unlocked</li>
+              <li>Elite analytics and review tools</li>
+              <li>Payment gateway will be added later</li>
+            </ul>
+            <button class="ghost-btn" type="button" data-plan-select="Elite">Switch to Elite</button>
+          </div>
+        </div>
+        <div class="plan-comparison-shell" aria-label="Plan feature comparison">
+          <div class="comparison-head">
+            <div><span>Plan Comparison</span><h2>Choose the plan by feature access</h2><p>Use this table to understand exactly what each membership unlocks before buying.</p></div>
+            <div class="comparison-legend"><span><i class="feature-check"></i> Included</span><span><i class="feature-dash"></i> Not included</span></div>
+          </div>
+          <div class="plan-comparison-scroll">
+            <table class="plan-comparison-table">
+              <thead>
+                <tr><th>Features</th><th>Free</th><th>Pro</th><th>Elite</th></tr>
+              </thead>
+              <tbody>
+                <tr class="feature-section"><td colspan="4">Trading</td></tr>
+                <tr><td>Connected Accounts</td><td>Manual only</td><td>1 MT5 account</td><td>Up to 5 accounts</td></tr>
+                <tr><td>Trades per Month</td><td>Latest 10</td><td>Unlimited</td><td>Unlimited</td></tr>
+                <tr><td>Trade History</td><td>Latest 10 trades</td><td>Unlimited</td><td>Unlimited</td></tr>
+                <tr><td>Manual Trade Entry</td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td></tr>
+                <tr><td>MT4/MT5 Auto-Sync</td><td><i class="feature-dash"></i></td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td></tr>
+                <tr><td>Multi-Account View</td><td><i class="feature-dash"></i></td><td>Single</td><td>Advanced</td></tr>
+                <tr><td>Backtesting Tools</td><td><i class="feature-dash"></i></td><td><i class="feature-dash"></i></td><td><i class="feature-check"></i></td></tr>
+
+                <tr class="feature-section"><td colspan="4">Journaling</td></tr>
+                <tr><td>Trade Notes</td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td></tr>
+                <tr><td>Screenshots</td><td>Basic</td><td>Unlimited</td><td>Unlimited</td></tr>
+                <tr><td>Tags & Categories</td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td></tr>
+                <tr><td>Pre/Post Trade Analysis</td><td><i class="feature-dash"></i></td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td></tr>
+                <tr><td>Custom Templates</td><td><i class="feature-dash"></i></td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td></tr>
+
+                <tr class="feature-section"><td colspan="4">Analytics</td></tr>
+                <tr><td>Basic Statistics</td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td></tr>
+                <tr><td>Performance Charts</td><td>Basic</td><td>Advanced</td><td>Advanced</td></tr>
+                <tr><td>Win Rate Analysis</td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td></tr>
+                <tr><td>Symbol Breakdown</td><td><i class="feature-dash"></i></td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td></tr>
+                <tr><td>Time-Based Analysis</td><td><i class="feature-dash"></i></td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td></tr>
+                <tr><td>Risk Metrics</td><td><i class="feature-dash"></i></td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td></tr>
+                <tr><td>AI Trade Insights</td><td><i class="feature-dash"></i></td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td></tr>
+                <tr><td>Advanced Risk Tools</td><td><i class="feature-dash"></i></td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td></tr>
+
+                <tr class="feature-section"><td colspan="4">Data & Reports</td></tr>
+                <tr><td>News Data</td><td>Today only</td><td>Complete</td><td>Complete</td></tr>
+                <tr><td>Chart Data</td><td>1 month</td><td>Full history</td><td>Full history</td></tr>
+                <tr><td>Full Trading Reports</td><td><i class="feature-dash"></i></td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td></tr>
+                <tr><td>Export to CSV/PDF</td><td><i class="feature-dash"></i></td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td></tr>
+
+                <tr class="feature-section"><td colspan="4">Community</td></tr>
+                <tr><td>Community Chat</td><td><i class="feature-dash"></i></td><td><i class="feature-dash"></i></td><td><i class="feature-check"></i></td></tr>
+                <tr><td>Leaderboard</td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td></tr>
+                <tr><td>VIP Access</td><td><i class="feature-dash"></i></td><td><i class="feature-dash"></i></td><td><i class="feature-check"></i></td></tr>
+
+                <tr class="feature-section"><td colspan="4">Support</td></tr>
+                <tr><td>Email Support</td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td></tr>
+                <tr><td>Chat Support</td><td><i class="feature-dash"></i></td><td><i class="feature-check"></i></td><td><i class="feature-check"></i></td></tr>
+                <tr><td>Mentor Support</td><td><i class="feature-dash"></i></td><td><i class="feature-dash"></i></td><td><i class="feature-check"></i></td></tr>
+                <tr><td>Priority Support</td><td><i class="feature-dash"></i></td><td><i class="feature-dash"></i></td><td><i class="feature-check"></i></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="sxm-page" data-app-panel="mt5">
+
+        <!-- EA Live Status Card -->
+        <div class="sxm-card mt5-connect-card">
+          <div class="mt5-panel-head">
+            <div><span>Direct MT5 Integration</span><h1>Connect MT4/MT5</h1><p>Install <strong>SwanXmSync.mq5</strong> inside MetaTrader 5 — it pushes your trades and open positions here automatically every 30 seconds. No Python, no ngrok needed.</p></div>
+            <span class="ea-sync-badge" data-ea-sync-badge hidden>Live</span>
+          </div>
+          <div class="notice amber" data-plan-lock="mt5" hidden>MT5 trade sync is locked on Free. Upgrade to Pro or Elite from Subscription to connect MetaTrader 5.</div>
+
+          <!-- One-click EA Download -->
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px">
+            <a data-ea-download-btn href="/api/mt5/ea-download" style="display:inline-flex;align-items:center;gap:9px;background:linear-gradient(90deg,#35ffa8,#00c6ff);color:#000;font-weight:700;font-size:0.97rem;padding:13px 22px;border-radius:12px;text-decoration:none;width:fit-content;transition:opacity .15s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16"/></svg>
+              Download EA File (Pre-configured)
+            </a>
+            <p style="font-size:0.82rem;opacity:.6;margin:0">Your token &amp; server URL are already baked in — no editing needed.</p>
+          </div>
+          <!-- Hidden inputs kept for token/url access in JS -->
+          <div style="display:none">
+            <input data-ea-token readonly autocomplete="off">
+            <input data-ea-push-url readonly autocomplete="off">
+          </div>
+
+          <!-- Live status -->
+          <div class="mt5-trade-preview" data-ea-status-card style="margin-top:14px">
+            <div class="card-row">
+              <div><span data-ea-last-sync style="font-size:0.82rem;opacity:.7">Not synced yet — install the EA to begin</span><h3 data-ea-account-name style="margin:2px 0 0"></h3></div>
+              <div style="text-align:right">
+                <strong data-ea-position-count style="font-size:1.4rem">—</strong>
+                <div style="font-size:0.75rem;opacity:.6">open positions</div>
+              </div>
+            </div>
+            <div class="mt5-trade-list" data-ea-position-list style="margin-top:8px"></div>
+          </div>
+
+          <div class="notice mt5-message" data-mt5-message style="margin-top:10px">Install the EA in MetaTrader 5 using the guide below, then your trades will appear here automatically.</div>
+
+          <!-- Saved credential status (shown when credentials already stored) -->
+          <div data-mt5-cred-status hidden style="margin-top:16px;padding:14px 16px;background:rgba(53,255,168,.07);border:1px solid rgba(53,255,168,.2);border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+            <div>
+              <div style="font-size:0.78rem;opacity:.6;margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em">Auto-Sync Active</div>
+              <strong style="font-size:0.95rem;color:#35ffa8" data-mt5-saved-login>—</strong>
+              <span style="opacity:.55;margin:0 6px">·</span>
+              <span style="font-size:0.88rem;opacity:.75" data-mt5-saved-server>—</span>
+            </div>
+            <button type="button" data-mt5-remove-creds style="background:rgba(255,90,90,.1);border:1px solid rgba(255,90,90,.25);color:#ff7e7e;padding:7px 13px;border-radius:8px;font-size:0.8rem;cursor:pointer">Remove</button>
+          </div>
+
+          <!-- Credential save form (shown when no credentials stored) -->
+          <form data-mt5-save-form style="margin-top:16px;display:grid;gap:10px" hidden>
+            <div style="font-size:0.82rem;opacity:.65;margin-bottom:2px">Save your MT5 credentials once — SwanXm auto-syncs your trades every time you log in.</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div class="field" style="margin:0"><label style="font-size:0.8rem">MT5 Account Number</label><input name="mt5SaveLogin" type="text" inputmode="numeric" placeholder="e.g. 56923362" autocomplete="off" style="font-size:0.9rem" /></div>
+              <div class="field" style="margin:0"><label style="font-size:0.8rem">Broker Server</label><input name="mt5SaveServer" type="text" placeholder="e.g. ICMarkets-Live" autocomplete="off" style="font-size:0.9rem" /></div>
+            </div>
+            <div class="field" style="margin:0"><label style="font-size:0.8rem">MT5 Password</label><div class="password-field"><input name="mt5SavePassword" type="password" placeholder="Your MT5 trading password" autocomplete="new-password" style="font-size:0.9rem" /><button type="button" data-toggle-password aria-label="Show password">Show</button></div></div>
+            <button type="submit" class="pill-btn" style="margin-top:4px;font-size:0.9rem;padding:11px 20px">Save &amp; Enable Auto-Sync</button>
+          </form>
+
+          <!-- Hidden inputs kept for legacy polling compatibility -->
+          <input data-mt5-login type="hidden"><input data-mt5-password type="hidden"><input data-mt5-server type="hidden">
+          <input data-mt5-status type="hidden"><input data-mt5-trade-count type="hidden">
+          <div data-mt5-trade-preview hidden><div data-mt5-trade-list></div></div>
+          <div data-mt5-account-note hidden></div>
+        </div>
+
+        <!-- EA Setup Guide -->
+        <div class="sxm-card mt5-setup-guide">
+          <div class="settings-panel-head">
+            <div><span>One-time setup · 3 steps</span><h3>Install SwanXmSync EA in MetaTrader 5</h3></div>
+            <em>Windows PC required</em>
+          </div>
+          <p class="mt5-guide-intro">The EA runs inside MetaTrader 5 on your Windows PC and pushes your trades and open positions directly to SwanXm automatically — no Python, no ngrok, no bridge, no manual entries.</p>
+          <ol class="mt5-guide-steps">
+            <li>
+              <strong>Click "Download EA File" above</strong>
+              <span>The file downloads already configured with your personal token and server URL — no editing needed.</span>
+            </li>
+            <li>
+              <strong>Copy the file into MetaTrader 5</strong>
+              <span>In MT5 go to <em>File → Open Data Folder → MQL5 → Experts</em> and paste <strong>SwanXmSync.mq5</strong> there. Then press F7 to compile.</span>
+            </li>
+            <li>
+              <strong>Allow the URL &amp; attach to any chart</strong>
+              <span>Go to <em>Tools → Options → Expert Advisors</em>, tick <strong>"Allow WebRequest for listed URL"</strong>, add your server URL, click OK. Then drag the EA onto any chart and click OK. Done — trades sync every 30 seconds automatically.</span>
+            </li>
+          </ol>
+          <div class="notice" style="margin-top:12px">
+            <strong>Once connected</strong>, the <em>Last synced</em> timer above updates every 30 seconds. Your closed trades appear in Trades &amp; Analytics and open positions show live here — fully automatic, nothing to do on your end.
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <style>
+    .ai-agent-shell { display: grid; gap: 10px; }
+    .ai-agent-header { display:flex; justify-content:space-between; align-items:center; gap:10px; font-size:0.88rem; color:#b7d7ff; }
+    .ai-agent-header strong { color:#8be9ff; font-weight:700; }
+    .ai-agent-chat {
+      min-height: 160px;
+      max-height: 260px;
+      overflow: auto;
+      border-radius: 16px;
+      padding: 10px;
+      background: rgba(8, 14, 25, 0.78);
+      border: 1px solid rgba(139, 233, 255, 0.12);
+      display: grid;
+      gap: 8px;
+    }
+    .ai-agent-bubble {
+      max-width: 92%;
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+    .ai-agent-user {
+      justify-self: end;
+      background: linear-gradient(135deg, #8be9ff, #35ffa8);
+      color: #05233a;
+    }
+    .ai-agent-bot {
+      justify-self: start;
+      background: rgba(15, 22, 37, 0.92);
+      border: 1px solid rgba(139, 233, 255, 0.16);
+      color: #eff8ff;
+    }
+    .ai-agent-typing {
+      font-style: italic;
+      opacity: 0.9;
+      border-style: dashed;
+    }
+    .ai-agent-form { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+    .ai-agent-form input {
+      border-radius: 12px;
+      border: 1px solid rgba(139, 233, 255, 0.16);
+      background: rgba(8, 14, 25, 0.92);
+      color: #eff8ff;
+      padding: 10px 12px;
+      font: inherit;
+    }
+    body.light-theme .ai-agent-chat,
+    body.light-theme .ai-agent-form input {
+      background: rgba(255, 255, 255, 0.92);
+      color: #122033;
+      border-color: rgba(6, 84, 120, 0.16);
+    }
+    body.light-theme .ai-agent-bot {
+      background: rgba(242, 247, 255, 0.98);
+      color: #12304a;
+      border-color: rgba(6, 84, 120, 0.12);
+    }
+
+    .dashboard-trades-list {
+      display: grid;
+      gap: 10px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .dashboard-trade-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.02);
+      transition: all 0.2s ease;
+    }
+
+    .dashboard-trade-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(139, 233, 255, 0.2);
+    }
+
+    .dashboard-trade-left {
+      flex: 1;
+    }
+
+    .dashboard-trade-symbol {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .dashboard-trade-details {
+      font-size: 11px;
+      color: #999;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .dashboard-trade-right {
+      text-align: right;
+      min-width: 100px;
+    }
+
+    .dashboard-trade-pnl {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .dashboard-trade-pnl.profit {
+      color: #35ffa8;
+    }
+
+    .dashboard-trade-pnl.loss {
+      color: #ff6b6b;
+    }
+
+    .dashboard-trade-meta {
+      font-size: 10px;
+      color: #666;
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .dashboard-trades-empty {
+      text-align: center;
+      padding: 30px 20px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    body.light-theme .dashboard-trade-item {
+      background: rgba(0, 0, 0, 0.02);
+      border-color: rgba(6, 84, 120, 0.1);
+    }
+
+    body.light-theme .dashboard-trade-item:hover {
+      background: rgba(0, 0, 0, 0.04);
+      border-color: rgba(6, 84, 120, 0.2);
+    }
+
+    body.light-theme .dashboard-trade-symbol {
+      color: #122033;
+    }
+
+    body.light-theme .dashboard-trade-details {
+      color: #667280;
+    }
+
+    .dashboard-open-positions-card {
+      position: relative;
+    }
+
+    .dashboard-open-positions-list {
+      display: grid;
+      gap: 10px;
+      max-height: 450px;
+      overflow-y: auto;
+    }
+
+    .dashboard-open-position-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid rgba(139, 233, 255, 0.2);
+      border-radius: 10px;
+      background: rgba(18, 216, 255, 0.05);
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dashboard-open-position-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, #12d8ff, #35ffa8);
+    }
+
+    .dashboard-open-position-item:hover {
+      background: rgba(18, 216, 255, 0.08);
+      border-color: rgba(139, 233, 255, 0.4);
+      transform: translateX(2px);
+    }
+
+    .dashboard-open-position-item.profit::before {
+      background: #35ffa8;
+    }
+
+    .dashboard-open-position-item.loss::before {
+      background: #ff6b6b;
+    }
+
+    .dashboard-open-position-left {
+      flex: 1;
+      padding-left: 8px;
+    }
+
+    .dashboard-open-position-symbol {
+      display: block;
+      font-size: 15px;
+      font-weight: 700;
+      color: #12d8ff;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .dashboard-open-position-details {
+      font-size: 12px;
+      color: #8be9ff;
+      display: grid;
+      gap: 4px;
+    }
+
+    .dashboard-open-position-detail-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .dashboard-open-position-detail-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #7ec8e3;
+    }
+
+    .dashboard-open-position-detail-label {
+      color: #556b7a;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .dashboard-open-position-detail-value {
+      color: #12d8ff;
+      font-weight: 600;
+    }
+
+    .dashboard-open-position-right {
+      text-align: right;
+      min-width: 110px;
+      padding-left: 12px;
+      border-left: 1px solid rgba(139, 233, 255, 0.15);
+    }
+
+    .dashboard-open-position-pnl {
+      display: block;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      font-family: 'Courier New', monospace;
+    }
+
+    .dashboard-open-position-pnl.profit {
+      color: #35ffa8;
+    }
+
+    .dashboard-open-position-pnl.loss {
+      color: #ff6b6b;
+    }
+
+    .dashboard-open-position-return {
+      font-size: 11px;
+      color: #7ec8e3;
+      font-weight: 500;
+    }
+
+    .dashboard-open-positions-empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: #556b7a;
+      font-size: 14px;
+    }
+
+    body.light-theme .dashboard-open-position-item {
+      background: rgba(18, 216, 255, 0.02);
+      border-color: rgba(6, 84, 120, 0.15);
+    }
+
+    body.light-theme .dashboard-open-position-item:hover {
+      background: rgba(18, 216, 255, 0.04);
+      border-color: rgba(6, 84, 120, 0.25);
+    }
+
+    body.light-theme .dashboard-open-position-symbol {
+      color: #007eb1;
+    }
+
+    body.light-theme .dashboard-open-position-details {
+      color: #3d8fa3;
+    }
+
+    body.light-theme .dashboard-open-position-detail-item {
+      color: #5d9db3;
+    }
+
+    body.light-theme .dashboard-open-position-detail-label {
+      color: #8ba7b7;
+    }
+
+    body.light-theme .dashboard-open-position-detail-value {
+      color: #007eb1;
+    }
+
+    body.light-theme .dashboard-open-position-right {
+      border-left-color: rgba(6, 84, 120, 0.1);
+    }
+
+    body.light-theme .dashboard-open-position-return {
+      color: #5d9db3;
+    }
+
+    body.light-theme .dashboard-open-positions-empty {
+      color: #8ba7b7;
+    }
+  </style>
+  <script src="/app.js?v=20260606-pnlresponsive"></script>
+</body>
+</html>

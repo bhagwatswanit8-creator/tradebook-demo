@@ -1,0 +1,3 @@
+# MetaTrader5 is a Windows-only desktop package and cannot be installed in the cloud.
+# MT5 sync works via the local mt5_http_bridge.py script run on the user's Windows machine.
+# No Python packages are required for the cloud deployment.

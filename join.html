@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Demo | SwanXm Trade Book</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="bg"></div><div class="grid"></div><div class="light-rays"></div>
+  <nav class="site-nav">
+    <a class="logo" href="index.html"><span class="brand-emblem">S</span><span><strong>SwanXm</strong><small>Trade Book</small></span></a>
+    <ul class="nav-links" data-nav-links>
+      <li><a href="index.html">Home</a></li><li><a href="about.html">Platform</a></li><li><a href="curriculum.html">Analytics</a></li><li><a href="plans.html">Pricing</a></li><li><a class="active" href="join.html">Book Demo</a></li>
+    </ul>
+    <div class="nav-actions"><a class="ghost-btn" href="login.html">Open App</a><a class="pill-btn" href="login.html?mode=signup">Start Journal</a><button class="nav-toggle" data-nav-toggle aria-label="Open navigation">=</button></div>
+  </nav>
+
+  <main class="page">
+    <section class="page-hero">
+      <div class="page-hero-inner">
+        <div class="tag"><span class="pulse"></span> Product demo</div>
+        <h1>Plan the paid launch. <span class="gradient-text">Start the journal now.</span></h1>
+        <p class="lead">Use this form as a demo lead capture flow for traders interested in SwanXm Trade Book, MT5 sync, and premium analytics access.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="split-section section-narrow">
+        <form class="auth-card" onsubmit="event.preventDefault(); localStorage.setItem('swanxmSelectedPlan', document.querySelector('#applyPlan').value); window.location.href='login.html?mode=signup';">
+          <div class="field"><label>Full Name</label><input type="text" placeholder="Your name" required></div>
+          <div class="field"><label>Email</label><input type="email" placeholder="you@example.com" required></div>
+          <div class="field"><label>Trading Market</label><select required><option>Forex</option><option>XAUUSD</option><option>Indices</option><option>Crypto</option></select></div>
+          <div class="field"><label>Interested Plan</label><select id="applyPlan" required><option>Pro Journal</option><option>Manual Starter</option><option>Elite Desk</option></select></div>
+          <div class="field"><label>Current Problem</label><textarea placeholder="Example: I overtrade during New York session and need MT5 auto journaling." required></textarea></div>
+          <button class="pill-btn" type="submit">Continue To App</button>
+        </form>
+
+        <div class="terminal-card">
+          <div class="card-top">
+            <div><div class="card-sub">Launch checklist</div><div class="card-title">SwanXm Ready</div></div>
+            <div class="orb-logo"><span>SXM</span></div>
+          </div>
+          <ul class="check-list">
+            <li>Landing page prepared for paid access.</li>
+            <li>Manual trade journal demo works in the browser.</li>
+            <li>MT5 sync flow is shown as a product capability.</li>
+            <li>Analytics highlight best day, time, session, and strategy.</li>
+            <li>Final pricing can be added when you decide.</li>
+          </ul>
+          <div class="insight-strip"><b>Next build phase</b><span>Connect authentication, database, payment gateway, and secure MT5 bridge.</span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><h2 class="gradient-text">SwanXm Trade Book</h2><p>Manual journaling - MT5 sync - Trade analysis - Strategy improvement</p></footer>
+  <script src="/app.js?v=20260606-flowcheck"></script>
+</body>
+</html>

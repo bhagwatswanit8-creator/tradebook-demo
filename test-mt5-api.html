@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MT5 Live Trades API Test</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 800px;
+      width: 100%;
+      padding: 40px;
+    }
+    
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-weight: 500;
+      font-size: 14px;
+    }
+    
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    
+    input:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 30px;
+    }
+    
+    button {
+      flex: 1;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .btn-test {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    
+    .btn-test:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-test:active {
+      transform: translateY(0);
+    }
+    
+    .btn-clear {
+      background: #f5f5f5;
+      color: #333;
+    }
+    
+    .btn-clear:hover {
+      background: #e0e0e0;
+    }
+    
+    #result {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 6px;
+      border-left: 4px solid #667eea;
+      display: none;
+    }
+    
+    #result.show {
+      display: block;
+    }
+    
+    #result.error {
+      border-left-color: #ff6b6b;
+      background: #ffe0e0;
+    }
+    
+    #result.success {
+      border-left-color: #35ffa8;
+      background: #e0ffe8;
+    }
+    
+    .result-title {
+      font-weight: 600;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+    
+    #result.error .result-title {
+      color: #c92a2a;
+    }
+    
+    #result.success .result-title {
+      color: #2b8a3e;
+    }
+    
+    pre {
+      background: white;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 15px;
+    }
+    
+    .stat-box {
+      background: white;
+      padding: 15px;
+      border-radius: 4px;
+      border-left: 3px solid #667eea;
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: #999;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+    
+    .stat-value {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .stat-box.profit .stat-value {
+      color: #35ffa8;
+    }
+    
+    .stat-box.loss .stat-value {
+      color: #ff6b6b;
+    }
+    
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .loading.show {
+      display: block;
+    }
+    
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 10px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .help-text {
+      font-size: 12px;
+      color: #999;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧪 MT5 Live Trades API Test</h1>
+    
+    <div class="form-group">
+      <label>MT5 Login (Account Number)</label>
+      <input type="text" id="login" placeholder="e.g., 123456789" value="">
+      <div class="help-text">Your MetaTrader5 account number</div>
+    </div>
+    
+    <div class="form-group">
+      <label>MT5 Password</label>
+      <input type="password" id="password" placeholder="Your MT5 password">
+      <div class="help-text">Your MetaTrader5 account password</div>
+    </div>
+    
+    <div class="form-group">
+      <label>MT5 Server</label>
+      <input type="text" id="server" placeholder="e.g., LirunexLimited-Live-MT5" value="">
+      <div class="help-text">Your MetaTrader5 server name</div>
+    </div>
+    
+    <div class="button-group">
+      <button class="btn-test" onclick="testApi()">Test Connection</button>
+      <button class="btn-clear" onclick="clearResult()">Clear Results</button>
+    </div>
+    
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <p>Testing connection...</p>
+    </div>
+    
+    <div id="result">
+      <div class="result-title" id="resultTitle"></div>
+      <div id="resultContent"></div>
+      <div class="stats" id="stats"></div>
+    </div>
+  </div>
+
+  <script>
+    async function testApi() {
+      const login = document.getElementById('login').value.trim();
+      const password = document.getElementById('password').value;
+      const server = document.getElementById('server').value.trim();
+      
+      if (!login) {
+        showError('Login is required');
+        return;
+      }
+      
+      if (!password) {
+        showError('Password is required');
+        return;
+      }
+      
+      if (!server) {
+        showError('Server is required');
+        return;
+      }
+      
+      showLoading(true);
+      
+      try {
+        const response = await fetch('/api/test/mt5-live-trades', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ login, password, server })
+        });
+        
+        const data = await response.json();
+        
+        if (data.ok) {
+          showSuccess(data);
+        } else {
+          showError(data.error || 'Unknown error');
+        }
+      } catch (error) {
+        showError('API request failed: ' + error.message);
+      } finally {
+        showLoading(false);
+      }
+    }
+    
+    function showSuccess(data) {
+      const resultDiv = document.getElementById('result');
+      const titleDiv = document.getElementById('resultTitle');
+      const contentDiv = document.getElementById('resultContent');
+      const statsDiv = document.getElementById('stats');
+      
+      resultDiv.className = 'show success';
+      titleDiv.textContent = '✓ Success! Connected to MT5';
+      
+      const trades = data.trades || [];
+      const stats = data.stats || {};
+      
+      contentDiv.innerHTML = `
+        <p><strong>Trades Found:</strong> ${trades.length}</p>
+        <p><strong>Response:</strong></p>
+        <pre>${JSON.stringify({trades, stats}, null, 2)}</pre>
+      `;
+      
+      statsDiv.innerHTML = `
+        <div class="stat-box">
+          <div class="stat-label">Total Trades</div>
+          <div class="stat-value">${stats.totalTrades || 0}</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Winning Trades</div>
+          <div class="stat-value">${stats.winningTrades || 0}</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Losing Trades</div>
+          <div class="stat-value">${stats.losingTrades || 0}</div>
+        </div>
+        <div class="stat-box ${(stats.totalPnl || 0) >= 0 ? 'profit' : 'loss'}">
+          <div class="stat-label">Total P&L</div>
+          <div class="stat-value">$${(stats.totalPnl || 0).toFixed(2)}</div>
+        </div>
+      `;
+    }
+    
+    function showError(message) {
+      const resultDiv = document.getElementById('result');
+      const titleDiv = document.getElementById('resultTitle');
+      const contentDiv = document.getElementById('resultContent');
+      const statsDiv = document.getElementById('stats');
+      
+      resultDiv.className = 'show error';
+      titleDiv.textContent = '✗ Error';
+      contentDiv.innerHTML = `<p><strong>${message}</strong></p>
+        <p style="margin-top: 15px; font-size: 13px; color: #666;">
+          <strong>Troubleshooting:</strong><br>
+          • Make sure MetaTrader 5 terminal is running<br>
+          • Verify you're logged into the correct MT5 account<br>
+          • Check credentials are correct<br>
+          • Ensure MT5 account has open positions<br>
+          • Check your MT5 server name
+        </p>`;
+      statsDiv.innerHTML = '';
+    }
+    
+    function clearResult() {
+      document.getElementById('result').className = '';
+      document.getElementById('result').innerHTML = '';
+    }
+    
+    function showLoading(show) {
+      document.getElementById('loading').className = show ? 'loading show' : 'loading';
+    }
+    
+    // Allow Enter key to test
+    document.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') testApi();
+    });
+  </script>
+</body>
+</html>

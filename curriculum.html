@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics | SwanXm Trade Book</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="bg"></div><div class="grid"></div><div class="light-rays"></div>
+  <nav class="site-nav">
+    <a class="logo" href="index.html"><span class="brand-emblem">S</span><span><strong>SwanXm</strong><small>Trade Book</small></span></a>
+    <ul class="nav-links" data-nav-links>
+      <li><a href="index.html">Home</a></li><li><a href="about.html">Platform</a></li><li><a class="active" href="curriculum.html">Analytics</a></li><li><a href="plans.html">Pricing</a></li><li><a href="join.html">Book Demo</a></li>
+    </ul>
+    <div class="nav-actions"><a class="ghost-btn" href="login.html">Open App</a><a class="pill-btn" href="login.html?mode=signup">Start Journal</a><button class="nav-toggle" data-nav-toggle aria-label="Open navigation">=</button></div>
+  </nav>
+
+  <main class="page">
+    <section class="page-hero">
+      <div class="page-hero-inner">
+        <div class="tag"><span class="pulse"></span> Analytics engine</div>
+        <h1>Know exactly when <span class="gradient-text">you trade best.</span></h1>
+        <p class="lead">SwanXm analytics are built around practical decisions: which sessions to trade, which strategies to size up, and which behaviors to remove from the playbook.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="tabs" data-tabs="modules">
+        <button class="tab-btn active" data-tab="performance">Performance</button>
+        <button class="tab-btn" data-tab="behavior">Behavior</button>
+        <button class="tab-btn" data-tab="automation">Automation</button>
+      </div>
+
+      <div class="module-grid tab-panel active" data-tab-panel-group="modules" data-tab-panel="performance">
+        <div class="module-card"><div class="icon">01</div><h3>Best Day</h3><p>Compare Monday through Friday by net P&L, win rate, average R, and drawdown impact.</p></div>
+        <div class="module-card"><div class="icon">02</div><h3>Best Time</h3><p>Find the exact windows where your entries are cleanest and the market pays your model.</p></div>
+        <div class="module-card"><div class="icon">03</div><h3>Best Session</h3><p>Measure Asia, London, New York, and overlap performance with session-specific scorecards.</p></div>
+      </div>
+
+      <div class="module-grid tab-panel" data-tab-panel-group="modules" data-tab-panel="behavior">
+        <div class="module-card"><div class="icon">04</div><h3>Emotion Tags</h3><p>Track fear, revenge, hesitation, confidence, patience, and rule-breaking patterns.</p></div>
+        <div class="module-card"><div class="icon">05</div><h3>Risk Control</h3><p>Spot oversized losses, repeated stop-outs, high-risk days, and daily loss limit violations.</p></div>
+        <div class="module-card"><div class="icon">06</div><h3>Strategy Grade</h3><p>Rank each setup by profit factor, average win, average loss, and consistency.</p></div>
+      </div>
+
+      <div class="module-grid tab-panel" data-tab-panel-group="modules" data-tab-panel="automation">
+        <div class="module-card"><div class="icon">07</div><h3>MT5 Import</h3><p>Sync closed trade history from MetaTrader 5 once the production server bridge is connected.</p></div>
+        <div class="module-card"><div class="icon">08</div><h3>Reports</h3><p>Generate weekly and monthly review summaries from your journal history.</p></div>
+        <div class="module-card"><div class="icon">09</div><h3>Mentor View</h3><p>Prepare dashboards that can be shared with a coach, prop desk, or trading team.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><h2 class="gradient-text">SwanXm Trade Book</h2><p>Manual journaling - MT5 sync - Trade analysis - Strategy improvement</p></footer>
+  <script src="/app.js?v=20260606-flowcheck"></script>
+</body>
+</html>

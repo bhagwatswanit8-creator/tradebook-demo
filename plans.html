@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing | SwanXm Trade Book</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="bg"></div><div class="grid"></div><div class="light-rays"></div>
+  <nav class="site-nav">
+    <a class="logo" href="index.html"><span class="brand-emblem">S</span><span><strong>SwanXm</strong><small>Trade Book</small></span></a>
+    <ul class="nav-links" data-nav-links>
+      <li><a href="index.html">Home</a></li><li><a href="about.html">Platform</a></li><li><a href="curriculum.html">Analytics</a></li><li><a class="active" href="plans.html">Pricing</a></li><li><a href="join.html">Book Demo</a></li>
+    </ul>
+    <div class="nav-actions"><a class="ghost-btn" href="login.html">Open App</a><a class="pill-btn" href="login.html?mode=signup">Start Journal</a><button class="nav-toggle" data-nav-toggle aria-label="Open navigation">=</button></div>
+  </nav>
+
+  <main class="page">
+    <section class="page-hero">
+      <div class="page-hero-inner">
+        <div class="tag"><span class="pulse"></span> Pricing now reflects the live membership tiers</div>
+        <h1>Paid access for <span class="gradient-text">serious journaling.</span></h1>
+        <p class="lead">Pro starts at $15 (₹2,199 INR) and Elite starts at $25 (₹3,399 INR). The payment gateway will be connected later.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="plan-grid">
+        <div class="plan-card">
+          <span class="plan-badge">Free Beta</span>
+          <h3>Manual Starter</h3>
+          <p>For traders who want to start logging trades and reviewing basic performance.</p>
+          <div class="plan-price">TBD</div>
+          <ul class="check-list">
+            <li>Manual trade entry</li>
+            <li>Basic P&L and win-rate analytics</li>
+            <li>Limited monthly trade history</li>
+          </ul>
+          <p class="plan-note">Use this as the free or trial tier once pricing is confirmed.</p>
+          <div class="button-row"><button class="ghost-btn" data-plan="Manual Starter">Select Plan</button></div>
+        </div>
+        <div class="plan-card featured">
+          <span class="plan-badge">Most Popular</span>
+          <h3>Pro Journal</h3>
+          <p>For active traders who need automation, reports, and deeper improvement analytics.</p>
+          <div class="plan-price">$15<br><small>₹2,199 INR</small></div>
+          <ul class="check-list">
+            <li>Unlimited manual journaling</li>
+            <li>Best day, time, session, and strategy reports</li>
+            <li>AI-style trade review summary</li>
+            <li>Pro analytics and review tools</li>
+          </ul>
+          <p class="plan-note">Payment gateway will be added later. Pro is the entry paid tier.</p>
+          <div class="button-row"><button class="pill-btn" data-plan="Pro Journal">Select Plan</button></div>
+        </div>
+        <div class="plan-card">
+          <span class="plan-badge">Advanced</span>
+          <h3>Elite Desk</h3>
+          <p>For serious traders, prop desk teams, and multi-account performance tracking.</p>
+          <div class="plan-price">$25<br><small>₹3,399 INR</small></div>
+          <ul class="check-list">
+            <li>MT5 syncing unlocked for Elite members</li>
+            <li>Strategy scorecards and equity review</li>
+            <li>Priority setup and custom reporting</li>
+            <li>Team or mentor dashboard</li>
+          </ul>
+          <p class="plan-note">Elite unlocks MT5 syncing and premium analytics. Payment gateway will be added later.</p>
+          <div class="button-row"><button class="ghost-btn" data-plan="Elite Desk">Select Plan</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title"><p>Questions</p><h2>Launch-ready <span class="gradient-text">pricing notes.</span></h2></div>
+      <div class="faq-list section-narrow">
+        <div class="faq-item open" data-faq><button class="faq-question">Can prices be changed later?<span>+</span></button><p>Yes. The cards are placeholders, so the final monthly, yearly, or lifetime pricing can be dropped in when you decide.</p></div>
+        <div class="faq-item" data-faq><button class="faq-question">Where will paid access connect?<span>+</span></button><p>The front end is ready for a payment and authentication backend. Later, Stripe, Razorpay, or another provider can unlock plan-based features.</p></div>
+        <div class="faq-item" data-faq><button class="faq-question">Is MT5 sync live now?<span>+</span></button><p>This version presents the connection workflow and simulates synced trades. A production build needs a secure server-side MT5 bridge and encrypted credential storage.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><h2 class="gradient-text">SwanXm Trade Book</h2><p>Manual journaling - MT5 sync - Trade analysis - Strategy improvement</p></footer>
+  <script src="/app.js?v=20260606-flowcheck"></script>
+</body>
+</html>
