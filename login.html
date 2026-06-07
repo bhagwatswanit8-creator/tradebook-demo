@@ -78,6 +78,73 @@
   </main>
 
   <main class="sxm-app" data-app-workspace hidden>
+
+    <!-- Live floating P&L ticker — visible across all panels when MT5 is connected -->
+    <div class="live-pnl-ticker" data-live-ticker hidden>
+      <span class="live-ticker-dot"></span>
+      <span class="live-ticker-label">LIVE</span>
+      <span class="live-ticker-positions" data-ticker-positions>0 positions</span>
+      <span class="live-ticker-divider">·</span>
+      <span class="live-ticker-float-label">Float P&amp;L</span>
+      <strong class="live-ticker-pnl" data-ticker-float-pnl>$0.00</strong>
+      <span class="live-ticker-divider">·</span>
+      <span class="live-ticker-equity" data-ticker-equity></span>
+    </div>
+
+    <style>
+      .live-pnl-ticker {
+        position: sticky;
+        top: 0;
+        z-index: 120;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 20px;
+        background: rgba(8, 14, 25, 0.92);
+        border-bottom: 1px solid rgba(53, 255, 168, 0.18);
+        backdrop-filter: blur(12px);
+        font-size: 0.82rem;
+        overflow: hidden;
+      }
+      .live-ticker-dot {
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: #35ffa8;
+        box-shadow: 0 0 6px #35ffa8;
+        animation: ticker-pulse 1.4s ease-in-out infinite;
+        flex-shrink: 0;
+      }
+      @keyframes ticker-pulse {
+        0%, 100% { opacity: 1; box-shadow: 0 0 6px #35ffa8; }
+        50% { opacity: 0.45; box-shadow: 0 0 2px #35ffa8; }
+      }
+      .live-ticker-label {
+        font-weight: 800;
+        font-size: 0.72rem;
+        letter-spacing: .1em;
+        color: #35ffa8;
+      }
+      .live-ticker-positions { opacity: .7; }
+      .live-ticker-divider { opacity: .3; }
+      .live-ticker-float-label { opacity: .55; }
+      .live-ticker-pnl {
+        font-size: 0.95rem;
+        font-weight: 700;
+        min-width: 72px;
+        transition: color 0.2s;
+      }
+      .live-ticker-pnl.profit { color: #35ffa8; }
+      .live-ticker-pnl.loss   { color: #ff6b6b; }
+      .live-ticker-equity { opacity: .5; font-size: 0.78rem; }
+      .live-ticker-flash {
+        animation: ticker-flash 0.25s ease-out;
+      }
+      @keyframes ticker-flash {
+        0%   { background: rgba(53,255,168,.12); }
+        100% { background: transparent; }
+      }
+    </style>
+
     <aside class="sxm-sidebar">
       <a class="sxm-brand" href="/index.html">
         <img src="/assets/swanxm-logo.png" alt="SwanXm logo">
