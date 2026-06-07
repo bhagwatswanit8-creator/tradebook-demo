@@ -1222,8 +1222,57 @@ function startMt5Stream() {
     } catch {}
   });
 
-  mt5Stream.addEventListener("error", () => {
-    // Auto-reconnects after 3s on error
+  // Server detected the account went offline and is reconnecting automatically
+  mt5Stream.addEventListener("reconnecting", (e) => {
+    try {
+      const data = JSON.parse(e.data);
+      showAppStatus("MT5 account offline — reconnecting automatically…", "info");
+      const msgEl = document.querySelector("[data-mt5-message]");
+      if (msgEl) { msgEl.textContent = data.message || "Reconnecting…"; msgEl.hidden = false; }
+      const ticker = document.querySelector("[data-live-ticker]");
+      if (ticker) {
+        const dot = ticker.querySelector(".live-ticker-dot");
+        if (dot) dot.style.background = "#f5a623";
+      }
+    } catch {}
+  });
+
+  // Server successfully reconnected the account
+  mt5Stream.addEventListener("reconnected", (e) => {
+    try {
+      const data = JSON.parse(e.data);
+      showAppStatus("MT5 reconnected — live data restored.", "success");
+      const msgEl = document.querySelector("[data-mt5-message]");
+      if (msgEl) { msgEl.textContent = "Connected via cloud — trades sync automatically."; msgEl.hidden = false; }
+      const ticker = document.querySelector("[data-live-ticker]");
+      if (ticker) {
+        const dot = ticker.querySelector(".live-ticker-dot");
+        if (dot) dot.style.background = "";   // reset to CSS default green
+      }
+      // Update stored accountId in case it changed
+      if (currentUser && data.accountId) {
+        currentUser.metaApiAccountId = data.accountId;
+        currentUser.hasMetaApi = true;
+        localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ token: authToken, user: currentUser }));
+      }
+      loadTrades().then(() => { renderMt5TradePreview(); renderTradeData(); }).catch(() => {});
+    } catch {}
+  });
+
+  // SSE-level transport error — try to restart the stream after 3s
+  mt5Stream.addEventListener("error", (e) => {
+    try {
+      const data = e.data ? JSON.parse(e.data) : {};
+      if (data.fatal) {
+        // Fatal reconnect failure — stop stream, tell user to re-enter creds
+        stopMt5Stream();
+        showAppStatus("MT5 connection lost. Please disconnect and reconnect your account.", "error");
+        const msgEl = document.querySelector("[data-mt5-message]");
+        if (msgEl) { msgEl.textContent = "Connection lost. Please reconnect your MT5 account."; msgEl.hidden = false; }
+        return;
+      }
+    } catch {}
+    // Transient network error — restart SSE stream after 3s
     stopMt5Stream();
     if (authToken && currentUser?.hasMetaApi) setTimeout(startMt5Stream, 3000);
   });

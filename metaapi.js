@@ -69,6 +69,30 @@ async function waitForDeployed(accountId, timeoutMs = 120000) {
   throw new Error("MT5 account connection timed out. Please try again.");
 }
 
+// Fetch raw account state from provisioning API — null if not found.
+async function getAccountState(accountId) {
+  try {
+    return await metaApiFetch(`${META_API_BASE}/users/current/accounts/${accountId}`);
+  } catch (err) {
+    if (/not found|404/i.test(err.message)) return null;
+    throw err;
+  }
+}
+
+// Ensure an account is deployed; re-deploys if UNDEPLOYED. Returns account object.
+async function ensureDeployed(accountId, timeoutMs = 90000) {
+  const account = await getAccountState(accountId);
+  if (!account) throw new Error("MetaApi account not found — it may have been removed.");
+  if (account.state === "DEPLOYED" || account.connectionStatus === "CONNECTED") return account;
+  // Re-deploy if undeploy state
+  if (["UNDEPLOYED", "UNDEPLOY_FAILED", "DEPLOY_FAILED"].includes(account.state)) {
+    await metaApiFetch(`${META_API_BASE}/users/current/accounts/${accountId}/deploy`, { method: "POST" });
+    return waitForDeployed(accountId, timeoutMs);
+  }
+  // Already in a deploying state — just wait
+  return waitForDeployed(accountId, timeoutMs);
+}
+
 async function fetchAccountHistory(accountId, from) {
   const fromStr = from ? from.toISOString() : new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString();
   const deals = await metaApiFetch(
@@ -132,6 +156,8 @@ function mapDealToTrade(deal, login, server) {
 module.exports = {
   provisionAccount,
   waitForDeployed,
+  getAccountState,
+  ensureDeployed,
   fetchAccountHistory,
   fetchOpenPositions,
   fetchAccountInfo,

@@ -1824,9 +1824,26 @@ app.post("/api/mt5/metaapi-sync", requireUser, async (req, res) => {
       }
     }
 
-    const deals = await metaApi.fetchAccountHistory(accountId);
-    const positions = await metaApi.fetchOpenPositions(accountId);
-    const accountInfo = await metaApi.fetchAccountInfo(accountId);
+    // If account is gone/offline, auto-reconnect before syncing
+    let deals, positions, accountInfo;
+    try {
+      [deals, positions, accountInfo] = await Promise.all([
+        metaApi.fetchAccountHistory(accountId),
+        metaApi.fetchOpenPositions(accountId),
+        metaApi.fetchAccountInfo(accountId)
+      ]);
+    } catch (fetchErr) {
+      if (isAccountGoneError(fetchErr)) {
+        accountId = await reconnectMetaApiAccount(user, db);
+        [deals, positions, accountInfo] = await Promise.all([
+          metaApi.fetchAccountHistory(accountId),
+          metaApi.fetchOpenPositions(accountId),
+          metaApi.fetchAccountInfo(accountId)
+        ]);
+      } else {
+        throw fetchErr;
+      }
+    }
 
     const tradeable = deals.filter(d =>
       d.entryType === "DEAL_ENTRY_OUT" || d.entryType === "DEAL_ENTRY_OUT_BY"
@@ -2371,6 +2388,50 @@ app.post("/api/ai/chat", requireUser, async (req, res) => {
   }
 });
 
+// ── Auto-reconnect helper ─────────────────────────────────────────────────────
+// Returns true if the error indicates the MetaApi account is gone/offline.
+function isAccountGoneError(err) {
+  return /not found|account not found|not deployed|no connection|account.*offline|undeploy|404/i.test(err?.message || "");
+}
+
+// Reconnect a user's MetaApi account using saved credentials.
+// Re-provisions (or re-deploys) the account, updates the DB, and returns the
+// working accountId.  Throws if credentials are missing or provisioning fails.
+async function reconnectMetaApiAccount(user, db) {
+  if (!user.mt5Login || !user.mt5EncPassword) throw new Error("No MT5 credentials saved. Please re-enter them.");
+  const password = decryptMt5Password(user.mt5EncPassword);
+  const login    = user.mt5Login;
+  const srv      = user.mt5Server || "";
+
+  // First try to redeploy the stored account if it still exists
+  if (user.metaApiAccountId) {
+    try {
+      await metaApi.ensureDeployed(user.metaApiAccountId);
+      return user.metaApiAccountId;
+    } catch (_) { /* account gone — fall through to full re-provision */ }
+  }
+
+  // Full re-provision (finds existing by login+server or creates new)
+  const account   = await metaApi.provisionAccount(login, password, srv);
+  const accountId = account.id;
+  await metaApi.waitForDeployed(accountId, 90000);
+
+  // Persist new accountId
+  if (db) {
+    await db.collection("users").updateOne(
+      { _id: makeMongoUserId(user._id ? String(user._id) : user.id) },
+      { $set: { metaApiAccountId: accountId, updatedAt: new Date() } }
+    );
+  } else {
+    const ldb = readLocalDb();
+    const u   = ldb.users.find(u => u.id === (user._id ? String(user._id) : user.id));
+    if (u) { u.metaApiAccountId = accountId; u.updatedAt = new Date().toISOString(); }
+    writeLocalDb(ldb);
+  }
+  console.log(`[MetaApi reconnect] User ${user.mt5Login} → accountId ${accountId}`);
+  return accountId;
+}
+
 // ── Real-time MT5 SSE stream ──────────────────────────────────────────────────
 // GET /api/mt5/live-stream?token=... — streams positions + PnL as SSE events
 // Polls MetaApi every 500ms for open positions, every 5s for new closed deals.
@@ -2384,7 +2445,7 @@ app.get("/api/mt5/live-stream", async (req, res) => {
   const user = await getUserById(payload.userId, db);
   if (!user || !user.metaApiAccountId) return res.status(400).end();
 
-  const accountId = user.metaApiAccountId;
+  let accountId = user.metaApiAccountId;   // mutable — may be updated by reconnect
   const login = user.mt5Login || "";
   const server = user.mt5Server || "";
   const userId = payload.userId;
@@ -2484,7 +2545,21 @@ app.get("/api/mt5/live-stream", async (req, res) => {
         }
       }
     } catch (err) {
-      send("error", { message: err.message });
+      if (isAccountGoneError(err)) {
+        send("reconnecting", { message: "MT5 account offline — reconnecting automatically…" });
+        try {
+          const freshUser = await getUserById(userId, db);
+          accountId = await reconnectMetaApiAccount(freshUser || user, db);
+          send("reconnected", { accountId, message: "MT5 reconnected successfully." });
+        } catch (reconnErr) {
+          send("error", { message: `Reconnect failed: ${reconnErr.message}`, fatal: true });
+          closed = true; // stop the stream — user needs to re-enter creds
+          res.end();
+          return;
+        }
+      } else {
+        send("error", { message: err.message });
+      }
     }
 
     if (!closed) setTimeout(streamTick, 500);
