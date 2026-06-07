@@ -7,6 +7,7 @@ const express = require("express");
 const cors = require("cors");
 const { spawn, spawnSync } = require("child_process");
 const { MongoClient, ObjectId } = require("mongodb");
+const metaApi = require("./metaapi");
 
 const app = express();
 const port = Number(process.env.PORT || 5000);
@@ -308,7 +309,9 @@ function publicUser(user) {
     theme: user.theme === "light" ? "light" : "dark",
     hasMt5Creds: !!(user.mt5Login && user.mt5EncPassword),
     mt5Login: user.mt5Login || "",
-    mt5Server: user.mt5Server || ""
+    mt5Server: user.mt5Server || "",
+    hasMetaApi: !!(user.metaApiAccountId),
+    metaApiAccountId: user.metaApiAccountId || ""
   };
 }
 
@@ -1670,6 +1673,234 @@ function detectSession(dateStr) {
     return "Asian";
   } catch { return "London"; }
 }
+
+// ── MetaApi Cloud MT5 Integration ─────────────────────────────────────────────
+// POST /api/mt5/metaapi-connect — provision account, wait for connection, import trades
+
+app.post("/api/mt5/metaapi-connect", requireUser, async (req, res) => {
+  if (!process.env.METAAPI_TOKEN) {
+    return res.status(503).json({ message: "MetaApi is not configured on this server." });
+  }
+  const login = normalizeMt5Login(req.body.login);
+  const password = String(req.body.password || "");
+  const server = normalizeMt5Server(req.body.server);
+  if (!login || !password || !server) {
+    return res.status(400).json({ message: "MT5 account number, password, and broker server are required." });
+  }
+  if (!/^\d{4,20}$/.test(login)) {
+    return res.status(400).json({ message: "MT5 account number should be numeric only." });
+  }
+
+  try {
+    // 1. Save credentials to user record
+    const encPass = encryptMt5Password(password);
+    const now = new Date();
+    const db = await getDb();
+    if (db) {
+      await db.collection("users").updateOne(
+        { _id: makeMongoUserId(req.user.userId) },
+        { $set: { mt5Login: login, mt5EncPassword: encPass, mt5Server: server, mt5CredSavedAt: now, updatedAt: now } }
+      );
+    } else {
+      const localDb = readLocalDb();
+      const user = localDb.users.find(u => u.id === req.user.userId);
+      if (user) Object.assign(user, { mt5Login: login, mt5EncPassword: encPass, mt5Server: server, mt5CredSavedAt: now.toISOString(), updatedAt: now.toISOString() });
+      writeLocalDb(localDb);
+    }
+
+    // 2. Respond immediately so frontend shows progress
+    res.json({ ok: true, status: "connecting", message: "Credentials saved. Connecting to MT5 in the background — trades will appear shortly." });
+
+    // 3. Background: provision MetaApi account, wait for connection, import trades
+    setImmediate(async () => {
+      try {
+        const account = await metaApi.provisionAccount(login, password, server);
+        const accountId = account.id;
+
+        // Store accountId on user for future syncs
+        const db2 = await getDb();
+        if (db2) {
+          await db2.collection("users").updateOne(
+            { _id: makeMongoUserId(req.user.userId) },
+            { $set: { metaApiAccountId: accountId, updatedAt: new Date() } }
+          );
+        } else {
+          const ldb = readLocalDb();
+          const u = ldb.users.find(u => u.id === req.user.userId);
+          if (u) { u.metaApiAccountId = accountId; u.updatedAt = new Date().toISOString(); }
+          writeLocalDb(ldb);
+        }
+
+        // Wait up to 2 minutes for MT5 connection
+        await metaApi.waitForDeployed(accountId, 120000);
+
+        // Fetch history and open positions
+        const deals = await metaApi.fetchAccountHistory(accountId);
+        const positions = await metaApi.fetchOpenPositions(accountId);
+        const accountInfo = await metaApi.fetchAccountInfo(accountId);
+
+        // Import closed deals as trades (skip open positions and non-trade entries)
+        const tradeable = deals.filter(d =>
+          d.entryType === "DEAL_ENTRY_OUT" || d.entryType === "DEAL_ENTRY_OUT_BY"
+        );
+
+        const userId = req.user.userId;
+        const db3 = await getDb();
+        const now2 = new Date();
+
+        if (db3) {
+          const mongoId = makeMongoUserId(userId);
+          const existing = new Set(
+            (await db3.collection("trades").find(
+              { userId: mongoId, source: "metaapi" },
+              { projection: { mt5DealId: 1 } }
+            ).toArray()).map(t => String(t.mt5DealId))
+          );
+          let inserted = 0;
+          for (const deal of tradeable) {
+            const mapped = metaApi.mapDealToTrade(deal, login, server);
+            if (existing.has(mapped.mt5DealId)) continue;
+            await db3.collection("trades").insertOne({ userId: mongoId, createdAt: now2, updatedAt: now2, ...mapped });
+            inserted++;
+          }
+
+          // Save positions + account info on user
+          const positionsMapped = positions.map(p => ({
+            symbol: p.symbol,
+            direction: p.type === "POSITION_TYPE_SELL" ? "short" : "long",
+            lotSize: p.volume,
+            entry: p.openPrice,
+            pnl: p.profit,
+            mt5DealId: String(p.id)
+          }));
+          await db3.collection("users").updateOne(
+            { _id: mongoId },
+            { $set: {
+              mt5EaLastSync: now2.toISOString(),
+              mt5EaPositions: positionsMapped,
+              mt5EaAccount: accountInfo ? {
+                balance: accountInfo.balance,
+                equity: accountInfo.equity,
+                floatingPnl: accountInfo.equity - accountInfo.balance,
+                currency: accountInfo.currency,
+                leverage: accountInfo.leverage
+              } : {}
+            }}
+          );
+          console.log(`[MetaApi] User ${userId} | ${inserted} trades imported | ${positions.length} open positions`);
+        }
+      } catch (err) {
+        console.error("[MetaApi bg connect]", err.message);
+      }
+    });
+  } catch (error) {
+    if (!res.headersSent) return res.status(500).json({ message: error.message });
+    console.error("[MetaApi connect]", error.message);
+  }
+});
+
+// POST /api/mt5/metaapi-sync — re-sync trades for a connected account
+app.post("/api/mt5/metaapi-sync", requireUser, async (req, res) => {
+  if (!process.env.METAAPI_TOKEN) {
+    return res.status(503).json({ message: "MetaApi is not configured." });
+  }
+  try {
+    const db = await getDb();
+    const user = await getUserById(req.user.userId, db);
+    if (!user || !user.mt5Login || !user.mt5EncPassword) {
+      return res.status(400).json({ ok: false, reason: "no_creds", message: "No MT5 credentials saved." });
+    }
+
+    let accountId = user.metaApiAccountId;
+    if (!accountId) {
+      const found = await metaApi.findExistingAccount(user.mt5Login, user.mt5Server || "");
+      if (!found) return res.json({ ok: false, reason: "no_account", message: "No MetaApi account found. Please reconnect." });
+      accountId = found.id;
+      if (db) {
+        await db.collection("users").updateOne(
+          { _id: makeMongoUserId(req.user.userId) },
+          { $set: { metaApiAccountId: accountId } }
+        );
+      }
+    }
+
+    const deals = await metaApi.fetchAccountHistory(accountId);
+    const positions = await metaApi.fetchOpenPositions(accountId);
+    const accountInfo = await metaApi.fetchAccountInfo(accountId);
+
+    const tradeable = deals.filter(d =>
+      d.entryType === "DEAL_ENTRY_OUT" || d.entryType === "DEAL_ENTRY_OUT_BY"
+    );
+
+    const userId = req.user.userId;
+    const now = new Date();
+    let inserted = 0;
+
+    if (db) {
+      const mongoId = makeMongoUserId(userId);
+      const existing = new Set(
+        (await db.collection("trades").find(
+          { userId: mongoId, source: "metaapi" },
+          { projection: { mt5DealId: 1 } }
+        ).toArray()).map(t => String(t.mt5DealId))
+      );
+      for (const deal of tradeable) {
+        const mapped = metaApi.mapDealToTrade(deal, user.mt5Login, user.mt5Server || "");
+        if (existing.has(mapped.mt5DealId)) continue;
+        await db.collection("trades").insertOne({ userId: mongoId, createdAt: now, updatedAt: now, ...mapped });
+        inserted++;
+      }
+      const positionsMapped = positions.map(p => ({
+        symbol: p.symbol,
+        direction: p.type === "POSITION_TYPE_SELL" ? "short" : "long",
+        lotSize: p.volume,
+        entry: p.openPrice,
+        pnl: p.profit,
+        mt5DealId: String(p.id)
+      }));
+      await db.collection("users").updateOne(
+        { _id: mongoId },
+        { $set: {
+          mt5EaLastSync: now.toISOString(),
+          mt5EaPositions: positionsMapped,
+          mt5EaAccount: accountInfo ? {
+            balance: accountInfo.balance, equity: accountInfo.equity,
+            floatingPnl: accountInfo.equity - accountInfo.balance,
+            currency: accountInfo.currency, leverage: accountInfo.leverage
+          } : {}
+        }}
+      );
+    }
+
+    return res.json({ ok: true, inserted, positions: positions.length, message: `Synced: ${inserted} new trades, ${positions.length} open positions.` });
+  } catch (error) {
+    return res.status(500).json({ ok: false, message: error.message });
+  }
+});
+
+// DELETE /api/mt5/metaapi-disconnect — remove MetaApi account
+app.delete("/api/mt5/metaapi-disconnect", requireUser, async (req, res) => {
+  try {
+    const db = await getDb();
+    const user = await getUserById(req.user.userId, db);
+    if (user?.metaApiAccountId) {
+      await metaApi.removeAccount(user.metaApiAccountId).catch(() => {});
+    }
+    if (db) {
+      await db.collection("users").updateOne(
+        { _id: makeMongoUserId(req.user.userId) },
+        { $unset: { mt5Login: "", mt5EncPassword: "", mt5Server: "", mt5CredSavedAt: "", metaApiAccountId: "" } }
+      );
+    } else {
+      const localDb = readLocalDb();
+      const u = localDb.users.find(u => u.id === req.user.userId);
+      if (u) { delete u.mt5Login; delete u.mt5EncPassword; delete u.mt5Server; delete u.metaApiAccountId; writeLocalDb(localDb); }
+    }
+    return res.json({ ok: true, message: "MT5 disconnected." });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
 
 // ─────────────────────────────────────────────────────────────────────────────
 

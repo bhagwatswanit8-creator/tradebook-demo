@@ -990,7 +990,7 @@ function openAuthenticatedApp(session) {
   document.querySelectorAll("[data-current-email]").forEach((node) => node.textContent = currentUser.email || "");
   renderSettingsState();
   renderPlanState();
-  renderMt5CredentialPanel();
+  renderMetaApiPanel();
   activateAppPanel("dashboard");
   loadTrades().then(() => {
     renderPlanState();
@@ -1212,22 +1212,145 @@ function startEaStatusPolling() {
   }, 30000);
 }
 
+// ── MetaApi cloud MT5 panel ───────────────────────────────────────────────────
+
+function renderMetaApiPanel() {
+  const connected = currentUser?.hasMetaApi || currentUser?.hasMt5Creds;
+  const connectedEl = document.querySelector("[data-metaapi-connected]");
+  const formEl = document.querySelector("[data-metaapi-connect-form]");
+  const loginDisplay = document.querySelector("[data-metaapi-login-display]");
+  const serverDisplay = document.querySelector("[data-metaapi-server-display]");
+  const msgEl = document.querySelector("[data-mt5-message]");
+
+  if (connectedEl) connectedEl.hidden = !connected;
+  if (formEl) formEl.hidden = connected;
+  if (connected) {
+    if (loginDisplay) loginDisplay.textContent = currentUser.mt5Login || "—";
+    if (serverDisplay) serverDisplay.textContent = currentUser.mt5Server || "—";
+    if (msgEl) {
+      msgEl.textContent = currentUser.hasMetaApi
+        ? "Connected via cloud — trades sync automatically."
+        : "Credentials saved. Cloud connection pending...";
+      msgEl.hidden = false;
+    }
+  } else {
+    if (msgEl) {
+      msgEl.textContent = "Enter your MT5 credentials below to connect your account automatically via the cloud.";
+      msgEl.hidden = false;
+    }
+  }
+}
+
+// Connect form submit
+document.querySelector("[data-metaapi-connect-form]")?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (!requireLogin()) return;
+  const form = new FormData(e.currentTarget);
+  const login = String(form.get("maLogin") || "").trim().replace(/\s+/g, "");
+  const password = String(form.get("maPassword") || "");
+  const server = String(form.get("maServer") || "").trim();
+  const btn = e.currentTarget.querySelector("[data-metaapi-connect-btn]");
+
+  if (!login || !password || !server) {
+    showAppStatus("Enter your MT5 account number, password, and broker server.", "error");
+    return;
+  }
+  if (!/^\d{4,20}$/.test(login)) {
+    showAppStatus("MT5 account number should be numeric only.", "error");
+    return;
+  }
+
+  const orig = btn?.textContent;
+  if (btn) { btn.disabled = true; btn.textContent = "Connecting…"; }
+  try {
+    const result = await apiRequest("/mt5/metaapi-connect", {
+      method: "POST",
+      body: JSON.stringify({ login, password, server })
+    });
+    if (result.ok) {
+      if (currentUser) {
+        currentUser.hasMt5Creds = true;
+        currentUser.mt5Login = login;
+        currentUser.mt5Server = server;
+        localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ token: authToken, user: currentUser }));
+      }
+      renderMetaApiPanel();
+      showAppStatus("MT5 connected! Syncing your trade history in the background…", "success");
+      e.currentTarget.reset();
+      // Reload trades after 30s to pick up imported data
+      setTimeout(() => {
+        loadTrades().then(() => { renderMt5TradePreview(); renderTradeData(); }).catch(() => {});
+      }, 30000);
+    } else {
+      showAppStatus(result.message || "Could not connect MT5.", "error");
+    }
+  } catch (err) {
+    showAppStatus(err.message || "Could not connect MT5.", "error");
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = orig; }
+  }
+});
+
+// Sync Now button
+document.querySelector("[data-metaapi-sync-btn]")?.addEventListener("click", async () => {
+  if (!requireLogin()) return;
+  const btn = document.querySelector("[data-metaapi-sync-btn]");
+  const orig = btn?.textContent;
+  if (btn) { btn.disabled = true; btn.textContent = "Syncing…"; }
+  try {
+    const result = await apiRequest("/mt5/metaapi-sync", { method: "POST" });
+    if (result.ok) {
+      showAppStatus(`Sync complete — ${result.inserted || 0} new trades imported.`, "success");
+      await loadTrades();
+      renderMt5TradePreview();
+      renderTradeData();
+    } else {
+      showAppStatus(result.message || "Sync failed.", "error");
+    }
+  } catch (err) {
+    showAppStatus(err.message || "Sync failed.", "error");
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = orig; }
+  }
+});
+
+// Disconnect button
+document.querySelector("[data-metaapi-disconnect-btn]")?.addEventListener("click", async () => {
+  if (!requireLogin()) return;
+  try {
+    await apiRequest("/mt5/metaapi-disconnect", { method: "DELETE" });
+    if (currentUser) {
+      currentUser.hasMt5Creds = false;
+      currentUser.hasMetaApi = false;
+      currentUser.mt5Login = "";
+      currentUser.mt5Server = "";
+      currentUser.metaApiAccountId = "";
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ token: authToken, user: currentUser }));
+    }
+    renderMetaApiPanel();
+    showAppStatus("MT5 disconnected.", "info");
+  } catch (err) {
+    showAppStatus("Could not disconnect.", "error");
+  }
+});
+
 // ── Silent MT5 auto-sync using saved backend credentials ─────────────────────
 
 let mt5BackgroundSyncPending = false;
 
 async function silentMt5AutoSync() {
   if (!authToken || mt5BackgroundSyncPending) return;
+  if (!currentUser?.hasMt5Creds) return;
   mt5BackgroundSyncPending = true;
   try {
-    const result = await apiRequest("/mt5/auto-sync", { method: "POST" });
-    if (result.ok && result.reason === "syncing") {
-      // Bridge responded — reload trades after short delay for data to arrive
+    // Use MetaApi sync if connected via cloud
+    const result = await apiRequest("/mt5/metaapi-sync", { method: "POST" });
+    if (result.ok && result.inserted > 0) {
       setTimeout(() => {
         loadTrades().then(() => { renderMt5TradePreview(); renderTradeData(); }).catch(() => {});
-      }, 6000);
+      }, 2000);
     }
-    renderMt5CredentialPanel(result);
+    renderMetaApiPanel();
   } catch (e) {
     // Silent — never show this error to user
   } finally {
@@ -1235,23 +1358,10 @@ async function silentMt5AutoSync() {
   }
 }
 
-// ── MT5 credential panel renderer ────────────────────────────────────────────
+// ── MT5 credential panel renderer (kept for compat) ─────────────────────────
 
-function renderMt5CredentialPanel(syncResult) {
-  const bridgeOnline = syncResult?.ok === true;
-  const msgEl = document.querySelector("[data-mt5-message]");
-  if (msgEl) {
-    if (bridgeOnline) {
-      msgEl.textContent = "MT5 bridge connected — syncing your trades in the background.";
-      msgEl.dataset.messageType = "info";
-    } else if (currentUser?.hasMt5Creds) {
-      msgEl.textContent = syncResult?.reason === "bridge_offline"
-        ? "MT5 credentials saved. Bridge offline — start the bridge on your VPS/PC for auto-sync."
-        : "MT5 credentials saved. Auto-sync active when bridge is running.";
-      msgEl.dataset.messageType = "info";
-    }
-    msgEl.hidden = false;
-  }
+function renderMt5CredentialPanel() {
+  renderMetaApiPanel();
 }
 
 // ── Save MT5 credentials to backend ──────────────────────────────────────────
