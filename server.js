@@ -311,7 +311,8 @@ function publicUser(user) {
     mt5Login: user.mt5Login || "",
     mt5Server: user.mt5Server || "",
     hasMetaApi: !!(user.metaApiAccountId),
-    metaApiAccountId: user.metaApiAccountId || ""
+    metaApiAccountId: user.metaApiAccountId || "",
+    metaApiConnectError: user.metaApiConnectError || ""
   };
 }
 
@@ -1714,6 +1715,19 @@ app.post("/api/mt5/metaapi-connect", requireUser, async (req, res) => {
     // 3. Background: provision MetaApi account, wait for connection, import trades
     setImmediate(async () => {
       try {
+        // Clear any previous connect error
+        const db0 = await getDb();
+        if (db0) {
+          await db0.collection("users").updateOne(
+            { _id: makeMongoUserId(req.user.userId) },
+            { $unset: { metaApiConnectError: "" } }
+          );
+        } else {
+          const ldb0 = readLocalDb();
+          const u0 = ldb0.users.find(u => u.id === req.user.userId);
+          if (u0) { delete u0.metaApiConnectError; writeLocalDb(ldb0); }
+        }
+
         const account = await metaApi.provisionAccount(login, password, server);
         const accountId = account.id;
 
@@ -1791,6 +1805,21 @@ app.post("/api/mt5/metaapi-connect", requireUser, async (req, res) => {
         }
       } catch (err) {
         console.error("[MetaApi bg connect]", err.message);
+        // Persist the error so the frontend poll can surface it
+        try {
+          const errMsg = err.message || "Unknown error";
+          const dbErr = await getDb();
+          if (dbErr) {
+            await dbErr.collection("users").updateOne(
+              { _id: makeMongoUserId(req.user.userId) },
+              { $set: { metaApiConnectError: errMsg, updatedAt: new Date() } }
+            );
+          } else {
+            const ldbErr = readLocalDb();
+            const uErr = ldbErr.users.find(u => u.id === req.user.userId);
+            if (uErr) { uErr.metaApiConnectError = errMsg; writeLocalDb(ldbErr); }
+          }
+        } catch (_) {}
       }
     });
   } catch (error) {

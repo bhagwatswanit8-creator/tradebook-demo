@@ -1542,6 +1542,18 @@ function startMetaApiPollUntilReady() {
     try {
       const fresh = await apiRequest("/auth/me");
       const user  = fresh?.user || fresh;
+
+      // Surface any provisioning error immediately
+      if (user?.metaApiConnectError) {
+        if (msgEl) {
+          msgEl.textContent = `Connection failed: ${user.metaApiConnectError}`;
+          msgEl.style.color = "#ff6b6b";
+          msgEl.hidden = false;
+        }
+        showAppStatus(`MT5 connection failed: ${user.metaApiConnectError}`, "error");
+        return;
+      }
+
       if (user?.hasMetaApi) {
         // Provisioning done — update local state
         if (currentUser) {

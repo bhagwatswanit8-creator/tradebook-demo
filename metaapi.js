@@ -27,16 +27,25 @@ async function sleep(ms) {
   return new Promise(r => setTimeout(r, ms));
 }
 
+// MetaApi returns _id, not id — normalise every account object to expose both.
+function normalizeAccount(a) {
+  if (!a || typeof a !== "object") return a;
+  const id = a._id || a.id || "";
+  return { ...a, id, _id: id };
+}
+
 async function findExistingAccount(login, server) {
   const accounts = await metaApiFetch(`${META_API_BASE}/users/current/accounts?limit=100`);
   const list = Array.isArray(accounts) ? accounts : (accounts.items || []);
-  return list.find(a => String(a.login) === String(login) && a.server === server) || null;
+  const found = list.find(a => String(a.login) === String(login) && a.server === server) || null;
+  return found ? normalizeAccount(found) : null;
 }
 
 async function provisionAccount(login, password, server) {
   const existing = await findExistingAccount(login, server);
   if (existing) {
-    if (existing.state === "DEPLOYED") return existing;
+    if (existing.state === "DEPLOYED" || existing.connectionStatus === "CONNECTED") return existing;
+    // Re-deploy the existing account
     await metaApiFetch(`${META_API_BASE}/users/current/accounts/${existing.id}/deploy`, { method: "POST" });
     return existing;
   }
@@ -55,24 +64,25 @@ async function provisionAccount(login, password, server) {
       tags: ["swanxm"]
     })
   });
-  return account;
+  return normalizeAccount(account);
 }
 
 async function waitForDeployed(accountId, timeoutMs = 120000) {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
     const account = await metaApiFetch(`${META_API_BASE}/users/current/accounts/${accountId}`);
-    if (account.connectionStatus === "CONNECTED" || account.state === "DEPLOYED") return account;
+    if (account.connectionStatus === "CONNECTED" || account.state === "DEPLOYED") return normalizeAccount(account);
     if (account.state === "DEPLOY_FAILED") throw new Error("MetaApi account deployment failed. Check your MT5 credentials.");
     await sleep(5000);
   }
   throw new Error("MT5 account connection timed out. Please try again.");
 }
 
-// Fetch raw account state from provisioning API — null if not found.
+// Fetch raw account state — null if not found.
 async function getAccountState(accountId) {
   try {
-    return await metaApiFetch(`${META_API_BASE}/users/current/accounts/${accountId}`);
+    const a = await metaApiFetch(`${META_API_BASE}/users/current/accounts/${accountId}`);
+    return normalizeAccount(a);
   } catch (err) {
     if (/not found|404/i.test(err.message)) return null;
     throw err;
@@ -84,12 +94,10 @@ async function ensureDeployed(accountId, timeoutMs = 90000) {
   const account = await getAccountState(accountId);
   if (!account) throw new Error("MetaApi account not found — it may have been removed.");
   if (account.state === "DEPLOYED" || account.connectionStatus === "CONNECTED") return account;
-  // Re-deploy if undeploy state
   if (["UNDEPLOYED", "UNDEPLOY_FAILED", "DEPLOY_FAILED"].includes(account.state)) {
     await metaApiFetch(`${META_API_BASE}/users/current/accounts/${accountId}/deploy`, { method: "POST" });
     return waitForDeployed(accountId, timeoutMs);
   }
-  // Already in a deploying state — just wait
   return waitForDeployed(accountId, timeoutMs);
 }
 
