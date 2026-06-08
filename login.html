@@ -770,83 +770,208 @@
 
       <section class="sxm-page" data-app-panel="mt5">
 
-        <!-- MetaApi Cloud Connect Card -->
         <div class="sxm-card mt5-connect-card">
+
+          <!-- ── Header ───────────────────────────────────────────────────── -->
           <div class="mt5-panel-head">
             <div>
               <span style="font-size:0.78rem;text-transform:uppercase;letter-spacing:.07em;color:#35ffa8;font-weight:700">Cloud MT5 Integration</span>
               <h1>Connect MT5</h1>
-              <p>Enter your MT5 credentials once — SwanXm connects directly via the cloud, syncs your trade history, and tracks open positions automatically. No software to install.</p>
+              <p>Enter your MT5 credentials once — SwanXm connects via the cloud, syncs your full trade history, and streams live open positions with real-time P&amp;L. No software to install.</p>
             </div>
-            <span class="ea-sync-badge" data-ea-sync-badge hidden>Live</span>
+            <span class="ea-sync-badge" data-ea-sync-badge hidden>LIVE</span>
           </div>
+
           <div class="notice amber" data-plan-lock="mt5" hidden>MT5 trade sync is locked on Free. Upgrade to Pro or Elite from Subscription to connect MetaTrader 5.</div>
 
-          <!-- Connected state (shown when account is linked) -->
-          <div data-metaapi-connected hidden style="margin-top:16px;padding:16px;background:rgba(53,255,168,.07);border:1px solid rgba(53,255,168,.22);border-radius:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
-            <div>
-              <div style="font-size:0.75rem;opacity:.55;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Connected Account</div>
-              <strong style="font-size:1rem;color:#35ffa8" data-metaapi-login-display>—</strong>
-              <span style="opacity:.45;margin:0 7px">·</span>
-              <span style="font-size:0.88rem;opacity:.7" data-metaapi-server-display>—</span>
-            </div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button type="button" data-metaapi-sync-btn style="background:rgba(53,255,168,.12);border:1px solid rgba(53,255,168,.3);color:#35ffa8;padding:8px 15px;border-radius:9px;font-size:0.82rem;cursor:pointer;font-weight:600">↻ Sync Now</button>
-              <button type="button" data-metaapi-disconnect-btn style="background:rgba(255,90,90,.08);border:1px solid rgba(255,90,90,.22);color:#ff7e7e;padding:8px 14px;border-radius:9px;font-size:0.82rem;cursor:pointer">Disconnect</button>
-            </div>
-          </div>
-
-          <!-- Live position status -->
-          <div class="mt5-trade-preview" data-ea-status-card style="margin-top:14px">
-            <div class="card-row">
-              <div><span data-ea-last-sync style="font-size:0.82rem;opacity:.7">Not synced yet</span><h3 data-ea-account-name style="margin:2px 0 0"></h3></div>
-              <div style="text-align:right">
-                <strong data-ea-position-count style="font-size:1.4rem">—</strong>
-                <div style="font-size:0.75rem;opacity:.6">open positions</div>
+          <!-- ── Connected account bar ─────────────────────────────────────── -->
+          <div data-metaapi-connected hidden class="mt5-connected-bar">
+            <div class="mt5-connected-info">
+              <div class="mt5-connected-dot"></div>
+              <div>
+                <div style="font-size:0.72rem;opacity:.5;text-transform:uppercase;letter-spacing:.07em">Connected Account</div>
+                <div style="margin-top:2px">
+                  <strong style="color:#35ffa8;font-size:0.97rem" data-metaapi-login-display>—</strong>
+                  <span style="opacity:.35;margin:0 8px">·</span>
+                  <span style="opacity:.65;font-size:0.87rem" data-metaapi-server-display>—</span>
+                  <span style="opacity:.35;margin:0 8px">·</span>
+                  <span style="opacity:.5;font-size:0.78rem" data-ea-last-sync>Not synced yet</span>
+                </div>
               </div>
             </div>
-            <div class="mt5-trade-list" data-ea-position-list style="margin-top:8px"></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button type="button" data-metaapi-sync-btn class="mt5-btn-sync">↻ Sync Now</button>
+              <button type="button" data-metaapi-disconnect-btn class="mt5-btn-disconnect">Disconnect</button>
+            </div>
           </div>
 
-          <div class="notice mt5-message" data-mt5-message style="margin-top:10px">Enter your MT5 credentials below to connect your account automatically via the cloud.</div>
+          <!-- ── Status message ────────────────────────────────────────────── -->
+          <div class="notice mt5-message" data-mt5-message style="margin-top:12px">Enter your MT5 credentials below to connect your account automatically via the cloud.</div>
 
-          <!-- Credential connect form (shown when not connected) -->
-          <form data-metaapi-connect-form style="margin-top:16px;display:grid;gap:12px">
-            <div style="font-size:0.83rem;opacity:.6;margin-bottom:-2px">Your credentials are encrypted and never shared. SwanXm uses them only to fetch your trade data.</div>
+          <!-- ── Account Summary (shown after first sync) ──────────────────── -->
+          <div class="mt5-account-summary" data-mt5-account-summary hidden>
+            <div class="mt5-summary-grid">
+              <div class="mt5-summary-item">
+                <span>Balance</span>
+                <strong data-mt5-balance>—</strong>
+              </div>
+              <div class="mt5-summary-item">
+                <span>Equity</span>
+                <strong data-mt5-equity>—</strong>
+              </div>
+              <div class="mt5-summary-item">
+                <span>Float P&amp;L</span>
+                <strong data-mt5-float-pnl>—</strong>
+              </div>
+              <div class="mt5-summary-item">
+                <span>Currency</span>
+                <strong data-mt5-currency>—</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Live Open Positions ───────────────────────────────────────── -->
+          <div class="mt5-section" data-mt5-positions-section>
+            <div class="mt5-section-head">
+              <h3>Live Open Positions</h3>
+              <span class="mt5-section-badge" data-ea-position-count>—</span>
+            </div>
+            <div class="mt5-position-list" data-ea-position-list>
+              <div class="mt5-empty-notice">Connect MT5 to see live open positions and real-time P&amp;L.</div>
+            </div>
+          </div>
+
+          <!-- ── Trade History ─────────────────────────────────────────────── -->
+          <div class="mt5-section" data-mt5-history-section hidden>
+            <div class="mt5-section-head">
+              <h3>Trade History</h3>
+              <span class="mt5-section-badge" data-mt5-history-count>0 trades</span>
+            </div>
+            <div class="mt5-history-list" data-mt5-history-list></div>
+          </div>
+
+          <!-- ── Credential connect form ───────────────────────────────────── -->
+          <form data-metaapi-connect-form class="mt5-connect-form">
+            <div style="font-size:0.82rem;opacity:.55;line-height:1.5">Your credentials are encrypted at rest and never shared. SwanXm uses them only to fetch your trade data via MetaApi cloud.</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
               <div class="field" style="margin:0">
                 <label style="font-size:0.8rem">MT5 Account Number</label>
-                <input name="maLogin" type="text" inputmode="numeric" placeholder="e.g. 56923362" autocomplete="off" style="font-size:0.9rem" required />
+                <input name="maLogin" type="text" inputmode="numeric" placeholder="e.g. 56923362" autocomplete="off" required />
               </div>
               <div class="field" style="margin:0">
                 <label style="font-size:0.8rem">Broker Server</label>
-                <input name="maServer" type="text" placeholder="e.g. XMGlobal-MT5 10" autocomplete="off" style="font-size:0.9rem" required />
+                <input name="maServer" type="text" placeholder="e.g. XMGlobal-MT5 10" autocomplete="off" required />
               </div>
             </div>
             <div class="field" style="margin:0">
               <label style="font-size:0.8rem">MT5 Password</label>
               <div class="password-field">
-                <input name="maPassword" type="password" placeholder="Your MT5 trading password" autocomplete="new-password" style="font-size:0.9rem" required />
+                <input name="maPassword" type="password" placeholder="Your MT5 trading password" autocomplete="new-password" required />
                 <button type="button" data-toggle-password aria-label="Show password">Show</button>
               </div>
             </div>
-            <button type="submit" data-metaapi-connect-btn class="pill-btn" style="margin-top:4px;font-size:0.93rem;padding:13px 20px">
-              Connect MT5 Account
-            </button>
+            <button type="submit" data-metaapi-connect-btn class="pill-btn" style="margin-top:4px;padding:13px 20px">Connect MT5 Account</button>
           </form>
 
-          <!-- Hidden inputs kept for legacy polling compatibility -->
+          <!-- Legacy hidden inputs -->
           <input data-mt5-login type="hidden"><input data-mt5-password type="hidden"><input data-mt5-server type="hidden">
           <input data-mt5-status type="hidden"><input data-mt5-trade-count type="hidden">
           <div data-mt5-trade-preview hidden><div data-mt5-trade-list></div></div>
           <div data-mt5-account-note hidden></div>
-
-          <!-- Hidden inputs kept for token/url access in JS -->
-          <div style="display:none">
-            <input data-ea-token readonly autocomplete="off">
-            <input data-ea-push-url readonly autocomplete="off">
-          </div>
+          <div style="display:none"><input data-ea-token readonly autocomplete="off"><input data-ea-push-url readonly autocomplete="off"></div>
         </div>
+
+        <style>
+          .mt5-connected-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 12px; flex-wrap: wrap;
+            margin-top: 16px; padding: 14px 16px;
+            background: rgba(53,255,168,.07);
+            border: 1px solid rgba(53,255,168,.22);
+            border-radius: 14px;
+          }
+          .mt5-connected-info { display: flex; align-items: center; gap: 12px; }
+          .mt5-connected-dot {
+            width: 9px; height: 9px; border-radius: 50%;
+            background: #35ffa8; box-shadow: 0 0 7px #35ffa8;
+            flex-shrink: 0;
+            animation: ticker-pulse 1.4s ease-in-out infinite;
+          }
+          .mt5-btn-sync {
+            background: rgba(53,255,168,.12); border: 1px solid rgba(53,255,168,.3);
+            color: #35ffa8; padding: 8px 15px; border-radius: 9px;
+            font-size: 0.82rem; cursor: pointer; font-weight: 600;
+          }
+          .mt5-btn-sync:hover { background: rgba(53,255,168,.2); }
+          .mt5-btn-disconnect {
+            background: rgba(255,90,90,.08); border: 1px solid rgba(255,90,90,.22);
+            color: #ff7e7e; padding: 8px 14px; border-radius: 9px;
+            font-size: 0.82rem; cursor: pointer;
+          }
+          .mt5-account-summary {
+            margin-top: 14px; padding: 14px 16px;
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 12px;
+          }
+          .mt5-summary-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+          }
+          @media (max-width: 600px) { .mt5-summary-grid { grid-template-columns: 1fr 1fr; } }
+          .mt5-summary-item { display: flex; flex-direction: column; gap: 4px; }
+          .mt5-summary-item span { font-size: 0.72rem; opacity: .5; text-transform: uppercase; letter-spacing: .07em; }
+          .mt5-summary-item strong { font-size: 1.05rem; font-weight: 700; }
+          .mt5-summary-item strong.profit { color: #35ffa8; }
+          .mt5-summary-item strong.loss   { color: #ff6b6b; }
+          .mt5-section {
+            margin-top: 20px;
+            border-top: 1px solid rgba(255,255,255,.07);
+            padding-top: 16px;
+          }
+          .mt5-section-head {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 12px;
+          }
+          .mt5-section-head h3 { margin: 0; font-size: 0.92rem; font-weight: 700; opacity: .9; }
+          .mt5-section-badge {
+            font-size: 0.75rem; font-weight: 600;
+            padding: 3px 10px; border-radius: 20px;
+            background: rgba(255,255,255,.07);
+            border: 1px solid rgba(255,255,255,.1);
+            opacity: .7;
+          }
+          .mt5-position-list, .mt5-history-list { display: grid; gap: 8px; }
+          .mt5-empty-notice { font-size: 0.83rem; opacity: .45; padding: 6px 0; }
+          .mt5-pos-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 12px;
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.07);
+            border-radius: 10px;
+            gap: 10px;
+          }
+          .mt5-pos-row.profit { border-color: rgba(53,255,168,.18); }
+          .mt5-pos-row.loss   { border-color: rgba(255,107,107,.18); }
+          .mt5-pos-symbol { font-weight: 700; font-size: 0.92rem; }
+          .mt5-pos-meta   { font-size: 0.75rem; opacity: .5; margin-top: 3px; }
+          .mt5-pos-pnl    { font-size: 0.97rem; font-weight: 700; text-align: right; min-width: 72px; }
+          .mt5-pos-pnl.profit { color: #35ffa8; }
+          .mt5-pos-pnl.loss   { color: #ff6b6b; }
+          .mt5-hist-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 9px 12px;
+            border-bottom: 1px solid rgba(255,255,255,.05);
+            gap: 10px;
+          }
+          .mt5-hist-row:last-child { border-bottom: none; }
+          .mt5-hist-symbol { font-weight: 600; font-size: 0.88rem; }
+          .mt5-hist-meta   { font-size: 0.74rem; opacity: .5; margin-top: 2px; }
+          .mt5-hist-pnl    { font-size: 0.9rem; font-weight: 700; text-align: right; min-width: 68px; }
+          .mt5-hist-pnl.profit { color: #35ffa8; }
+          .mt5-hist-pnl.loss   { color: #ff6b6b; }
+          .mt5-connect-form { margin-top: 20px; display: grid; gap: 12px; }
+        </style>
+
       </section>
     </section>
   </main>

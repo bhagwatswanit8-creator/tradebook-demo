@@ -1374,6 +1374,39 @@ function renderLivePositions(data) {
     ? `${count} open position${count > 1 ? "s" : ""}`
     : "No open positions";
 
+  // ── Update MT5 panel account summary ────────────────────────────────────────
+  const summaryCard  = document.querySelector("[data-mt5-account-summary]");
+  const balEl        = document.querySelector("[data-mt5-balance]");
+  const equityEl     = document.querySelector("[data-mt5-equity]");
+  const floatPnlEl   = document.querySelector("[data-mt5-float-pnl]");
+  const currencyEl   = document.querySelector("[data-mt5-currency]");
+  const posSection   = document.querySelector("[data-mt5-positions-section]");
+  const posSectionBadge = document.querySelector("[data-ea-position-count]");
+  const posSectionList  = document.querySelector("[data-ea-position-list]");
+
+  if (acc && summaryCard) {
+    summaryCard.hidden = false;
+    const bal    = Number(acc.balance || 0);
+    const eq     = Number(acc.equity  || 0);
+    const flt    = eq - bal;
+    if (balEl)      { balEl.textContent    = formatCurrency(bal); }
+    if (equityEl)   { equityEl.textContent = formatCurrency(eq);  }
+    if (floatPnlEl) {
+      floatPnlEl.textContent = (flt >= 0 ? "+" : "") + formatCurrency(flt);
+      floatPnlEl.className   = flt > 0 ? "profit" : flt < 0 ? "loss" : "";
+    }
+    if (currencyEl) { currencyEl.textContent = acc.currency || "—"; }
+  }
+
+  // Update positions section list and badge
+  if (posSectionBadge) {
+    posSectionBadge.textContent = count > 0 ? `${count} open` : "none";
+  }
+  if (posSectionList) {
+    posSectionList.innerHTML = count > 0 ? posHtml
+      : '<div class="mt5-empty-notice">No open positions right now.</div>';
+  }
+
   // Update PnL cards with new floating P&L
   renderDashboardPnlCards();
 }
@@ -1914,6 +1947,7 @@ async function loadTrades() {
   const result = await apiRequest(`/trades${getMt5AccountQuery()}`);
   currentTrades = Array.isArray(result.trades) ? result.trades : [];
   renderTradeData();
+  renderMt5TradeHistory();
 }
 
 function resetAnalytics() {
@@ -2614,6 +2648,49 @@ function renderDashboardOpenPositions() {
         </div>`;
       }).join("")
     : `<div class="dashboard-open-positions-empty">No open positions. Connect MT5 to sync live trades.</div>`;
+}
+
+// ── MT5 Trade History renderer ─────────────────────────────────────────────────
+// Renders closed MetaApi trades into the MT5 panel history section.
+function renderMt5TradeHistory() {
+  const section   = document.querySelector("[data-mt5-history-section]");
+  const list      = document.querySelector("[data-mt5-history-list]");
+  const countEl   = document.querySelector("[data-mt5-history-count]");
+
+  if (!section || !list) return;
+
+  // Filter to MetaApi-sourced closed trades, newest first
+  const mt5Trades = currentTrades
+    .filter(t => t.source === "metaapi")
+    .sort((a, b) => new Date(b.closedAt || b.date) - new Date(a.closedAt || a.date))
+    .slice(0, 50);   // show latest 50
+
+  if (mt5Trades.length === 0) {
+    section.hidden = true;
+    return;
+  }
+
+  section.hidden = false;
+  if (countEl) countEl.textContent = `${mt5Trades.length} trade${mt5Trades.length > 1 ? "s" : ""}`;
+
+  list.innerHTML = mt5Trades.map(t => {
+    const pnl     = Number(t.pnl || 0);
+    const pnlCls  = pnl > 0 ? "profit" : pnl < 0 ? "loss" : "";
+    const pnlStr  = (pnl >= 0 ? "+" : "") + formatCurrency(pnl);
+    const dir     = (t.direction || "").toUpperCase();
+    const date    = t.closedAt ? new Date(t.closedAt).toLocaleString("en-US", { month:"short", day:"numeric", hour:"2-digit", minute:"2-digit" })
+                               : (t.date || "—");
+    const lots    = Number(t.lotSize || 0).toFixed(2);
+    const entry   = Number(t.entry || 0).toFixed(t.entry > 100 ? 2 : 5);
+    const exit    = Number(t.exit  || 0).toFixed(t.exit  > 100 ? 2 : 5);
+    return `<div class="mt5-hist-row">
+      <div>
+        <div class="mt5-hist-symbol">${escapeHtml(t.symbol || "")} <span style="opacity:.5;font-size:0.78rem;font-weight:400">${dir} ${lots}L</span></div>
+        <div class="mt5-hist-meta">${date} · ${entry} → ${exit}</div>
+      </div>
+      <div class="mt5-hist-pnl ${pnlCls}">${pnlStr}</div>
+    </div>`;
+  }).join("");
 }
 
 if (tradeForm) {
