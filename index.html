@@ -3,57 +3,688 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SwanXm Trade Book | Trade Journaling & MT5 Analytics</title>
+  <title>SwanXm Trade Book | Premium MT5 Trade Journal</title>
+  <meta name="description" content="Professional trading journal with MT5 cloud sync, performance analytics, AI reports and real-time P&L tracking.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/landing.css?v=2" />
+  <script>
+    // Instant no-flash theme init
+    (function(){
+      var t = localStorage.getItem('sxm-lp-theme');
+      if(t==='light') document.documentElement.style.setProperty('--bg','#ffffff');
+    })();
+  </script>
 </head>
-<body class="public-dark">
-  <div class="bg"></div><div class="grid"></div><div class="light-rays"></div>
-  <nav class="site-nav">
-    <a class="logo" href="/index.html">
-      <img src="/assets/swanxm-logo.png" alt="SwanXm logo" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">
-      <span><strong>SwanXm</strong><small>Trade Book</small></span>
+<body class="lp-page">
+
+  <!-- Ambient glow orbs -->
+  <div class="lp-orb lp-orb-1" aria-hidden="true"></div>
+  <div class="lp-orb lp-orb-2" aria-hidden="true"></div>
+
+  <!-- ══ NAV ══════════════════════════════════════ -->
+  <nav class="lp-nav" id="lp-nav">
+    <a class="lp-logo" href="#home">
+      <img src="/assets/swanxm-logo.png" alt="SwanXm logo">
+      <div class="lp-logo-text">
+        <strong>SwanXm</strong>
+        <small>Trade Book</small>
+      </div>
     </a>
-    <ul class="nav-links" data-nav-links>
-      <li><a class="active" href="/index.html">Home</a></li>
-      <li><a href="/about.html">Platform</a></li>
-      <li><a href="/curriculum.html">Analytics</a></li>
-      <li><a href="/plans.html">Pricing</a></li>
-      <li><a href="/join.html">Book Demo</a></li>
+
+    <ul class="lp-nav-links" id="lp-nav-links">
+      <li><a href="#home" class="active">Home</a></li>
+      <li><a href="#platform">Platform</a></li>
+      <li><a href="#analytics">Analytics</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#demo">Book Demo</a></li>
     </ul>
-    <div class="nav-actions">
-      <a class="ghost-btn" href="/login.html">Login</a>
-      <a class="pill-btn" href="/login.html?mode=signup">Start Journaling</a>
-      <button class="nav-toggle" data-nav-toggle aria-label="Open navigation">=</button>
+
+    <div class="lp-nav-actions">
+      <button class="lp-theme-btn" id="lp-theme-toggle" aria-label="Toggle theme" title="Toggle dark / light">
+        <span id="lp-theme-icon">☾</span>
+      </button>
+      <a class="lp-btn-ghost" href="/login.html">Login</a>
+      <a class="lp-btn-primary" href="/login.html?mode=signup">Start Free</a>
+      <button class="lp-hamburger" id="lp-hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
 
-  <main class="page">
-    <section class="hero">
-      <div class="hero-container">
-        <div>
-          <div class="tag"><span class="pulse"></span> Manual journal + MT5 sync</div>
-          <h1>SwanXm <span class="gradient-text">Trade Book.</span></h1>
-          <p class="lead">A premium trading journal rebuilt as SwanXm Trade Book with verified email login, manual trade entry, MT5 sync, analytics, reports, market tools, and subscription pages.</p>
-          <div class="hero-buttons">
-            <a class="pill-btn" href="/login.html?mode=signup">Create Account</a>
-            <a class="ghost-btn" href="/login.html">Login</a>
-          </div>
+  <!-- Mobile slide-down menu -->
+  <div class="lp-mobile-menu" id="lp-mobile-menu">
+    <a href="#home">Home</a>
+    <a href="#platform">Platform</a>
+    <a href="#analytics">Analytics</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#demo">Book Demo</a>
+    <div class="mm-divider"></div>
+    <div class="mm-actions">
+      <a class="lp-btn-ghost" href="/login.html" style="flex:1;text-align:center">Login</a>
+      <a class="lp-btn-primary" href="/login.html?mode=signup" style="flex:1;text-align:center">Start Free</a>
+    </div>
+  </div>
+
+  <!-- ══ HERO ══════════════════════════════════════ -->
+  <section class="lp-section" id="home">
+    <div class="hero-grid">
+
+      <!-- Left copy -->
+      <div class="hero-left">
+        <div class="lp-tag reveal">
+          <span class="lp-pulse"></span>
+          MT5 Cloud Sync · Live P&amp;L · AI Reports
         </div>
-        <div class="terminal-card">
-          <div class="card-top"><div><div class="card-sub">SwanXm Dashboard</div><div class="card-title">XAUUSD Journal</div></div><div class="orb-logo"><span>SXM</span></div></div>
-          <div class="dashboard-preview">
-            <div class="preview-stat hot"><span>Total P&L</span><strong>$0.00</strong><em>User data only</em></div>
-            <div class="preview-stat"><span>Win Rate</span><strong>0%</strong><em>After trades</em></div>
-            <div class="preview-stat"><span>Best Session</span><strong>-</strong><em>Calculated live</em></div>
-            <div class="preview-stat"><span>MT5 Status</span><strong>Ready</strong><em>Backend sync</em></div>
-          </div>
-          <div class="chart"><div class="chart-line"></div><div class="chart-bars"><span style="height:44%"></span><span style="height:70%"></span><span style="height:35%"></span><span style="height:82%"></span><span style="height:60%"></span><span style="height:92%"></span></div></div>
+        <h1 class="lp-h1 reveal reveal-delay-1">
+          The journal that<br>
+          <span class="lp-gradient">trades understand.</span>
+        </h1>
+        <p class="lp-lead reveal reveal-delay-2">
+          Manual journaling, MT5 cloud sync, real-time open position tracking, performance analytics, and AI-powered trade reviews — all in one premium workspace.
+        </p>
+        <div class="hero-cta-row reveal reveal-delay-3">
+          <a class="lp-btn-xl" href="/login.html?mode=signup">Start Journaling Free</a>
+          <a class="lp-btn-xl-ghost" href="#platform">See How It Works</a>
+        </div>
+        <div class="hero-trust reveal reveal-delay-4">
+          <div class="hero-trust-item"><span>✓</span>&nbsp;No EA software</div>
+          <div class="hero-trust-dot"></div>
+          <div class="hero-trust-item"><span>✓</span>&nbsp;Credentials-only MT5</div>
+          <div class="hero-trust-dot"></div>
+          <div class="hero-trust-item"><span>✓</span>&nbsp;Live P&amp;L stream</div>
         </div>
       </div>
-    </section>
-  </main>
-  <script src="/app.js?v=20260606-flowcheck"></script>
+
+      <!-- Dashboard preview card -->
+      <div class="reveal reveal-delay-2" style="display:flex;justify-content:center">
+        <div class="hero-card" style="width:100%;max-width:400px">
+          <div class="hc-topbar">
+            <div class="hc-topbar-left">
+              <strong>SwanXm Dashboard</strong>
+              <span>XAUUSD Journal</span>
+            </div>
+            <div class="hc-orb">SXM</div>
+          </div>
+          <div class="hc-stats">
+            <div class="hc-stat">
+              <div class="hc-stat-label">Total P&amp;L</div>
+              <div class="hc-stat-value green">+$4,820</div>
+              <div class="hc-stat-sub">This month</div>
+            </div>
+            <div class="hc-stat">
+              <div class="hc-stat-label">Win Rate</div>
+              <div class="hc-stat-value">67%</div>
+              <div class="hc-stat-sub">Calculated live</div>
+            </div>
+            <div class="hc-stat">
+              <div class="hc-stat-label">Best Session</div>
+              <div class="hc-stat-value" style="font-size:1rem">London</div>
+              <div class="hc-stat-sub">By net P&amp;L</div>
+            </div>
+            <div class="hc-stat">
+              <div class="hc-stat-label">MT5 Status</div>
+              <div class="hc-stat-value green" style="font-size:1rem">Cloud ●</div>
+              <div class="hc-stat-sub">Live sync</div>
+            </div>
+          </div>
+          <div class="hc-chart">
+            <div class="hc-chart-label">Weekly Performance</div>
+            <div class="hc-live-badge">
+              <span class="lp-pulse" style="width:5px;height:5px;flex-shrink:0"></span> LIVE
+            </div>
+            <div class="hc-bars" id="hero-bars">
+              <div class="hc-bar profit" style="height:4%"></div>
+              <div class="hc-bar profit" style="height:4%"></div>
+              <div class="hc-bar loss"   style="height:4%"></div>
+              <div class="hc-bar profit" style="height:4%"></div>
+              <div class="hc-bar profit" style="height:4%"></div>
+              <div class="hc-bar loss"   style="height:4%"></div>
+              <div class="hc-bar profit" style="height:4%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ STATS STRIP ═══════════════════════════════ -->
+  <div class="stats-strip">
+    <div class="stats-strip-inner">
+      <div class="stat-block reveal">
+        <div class="stat-number"><span class="count-up" data-target="100">0</span><span class="stat-accent">%</span></div>
+        <div class="stat-desc">Cloud-based — no EA install required</div>
+      </div>
+      <div class="stat-block reveal reveal-delay-1">
+        <div class="stat-number"><span class="count-up" data-target="500">0</span><span class="stat-accent">ms</span></div>
+        <div class="stat-desc">Live P&amp;L position refresh rate</div>
+      </div>
+      <div class="stat-block reveal reveal-delay-2">
+        <div class="stat-number"><span class="count-up" data-target="12">0</span><span class="stat-accent">+</span></div>
+        <div class="stat-desc">Performance analytics modules</div>
+      </div>
+      <div class="stat-block reveal reveal-delay-3">
+        <div class="stat-number"><span class="count-up" data-target="365">0</span><span class="stat-accent">d</span></div>
+        <div class="stat-desc">Trade history import window</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PLATFORM ══════════════════════════════════ -->
+  <section class="lp-section" id="platform">
+    <div class="lp-section-inner">
+
+      <div class="lp-section-header">
+        <div class="lp-eyebrow reveal">Platform</div>
+        <h2 class="lp-h2 reveal reveal-delay-1">Built for traders who<br><span class="lp-gradient">want the truth.</span></h2>
+        <p class="lp-lead reveal reveal-delay-2">
+          Most journals collect trades. SwanXm turns them into structured evidence — strategy, session, emotion, risk, and result — so you act on patterns instead of memories.
+        </p>
+      </div>
+
+      <div class="features-grid" style="margin-bottom:80px">
+        <div class="feature-card reveal">
+          <div class="feature-icon">📓</div>
+          <h3 class="lp-h3">Manual Journal</h3>
+          <p>Log any trade in seconds with symbol, direction, session, strategy, emotion tags, and notes. Fully structured from day one.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-1">
+          <div class="feature-icon">🔗</div>
+          <h3 class="lp-h3">MT5 Cloud Sync</h3>
+          <p>Connect MetaTrader 5 with credentials only — no Expert Advisor, no software install. MetaApi handles the secure cloud bridge.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="feature-icon">📡</div>
+          <h3 class="lp-h3">Live P&amp;L Stream</h3>
+          <p>Real-time open position tracking every 500ms via SSE. See floating P&amp;L, equity, and position count update live as the market moves.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-3">
+          <div class="feature-icon">📊</div>
+          <h3 class="lp-h3">Performance Analytics</h3>
+          <p>Best day, time, session, strategy, win rate trends, drawdown history, and profit factor — calculated automatically from your real trades.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-4">
+          <div class="feature-icon">🤖</div>
+          <h3 class="lp-h3">AI Trade Reports</h3>
+          <p>DeepSeek-powered summaries of your weekly and monthly performance with actionable insights and pattern identification.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-5">
+          <div class="feature-icon">🔒</div>
+          <h3 class="lp-h3">Secure &amp; Private</h3>
+          <p>Passwords AES-encrypted at rest, read-only MT5 access, no third-party data sharing. Your trade data stays yours.</p>
+        </div>
+      </div>
+
+      <!-- Split: Why it matters -->
+      <div class="split-grid">
+        <div class="split-content reveal">
+          <div class="lp-eyebrow">Why it matters</div>
+          <h2 class="lp-h2">Stop guessing.<br><span class="lp-gradient">Start improving.</span></h2>
+          <p class="lp-lead">Most traders lose track of the reason behind each result. SwanXm connects journaling discipline with performance analytics so you can see the repeatable patterns behind your wins — and remove the habits costing you money.</p>
+        </div>
+        <div class="reveal reveal-delay-2">
+          <ul class="check-list">
+            <li>Capture trades quickly with setup, risk, session, and emotion context.</li>
+            <li>Connect MetaTrader 5 securely — no EA, no downloads, just credentials.</li>
+            <li>Review best day, time, session, symbol, and strategy automatically.</li>
+            <li>Separate profitable behaviour from overtrading, revenge, and news noise.</li>
+            <li>Build discipline through data, not willpower or rough memory.</li>
+            <li>Access premium analytics, AI reports, and backtesting as you grow.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ ANALYTICS ═════════════════════════════════ -->
+  <section class="lp-section" id="analytics">
+    <div class="lp-section-inner">
+
+      <div class="lp-section-header">
+        <div class="lp-eyebrow reveal">Analytics Engine</div>
+        <h2 class="lp-h2 reveal reveal-delay-1">Know exactly when<br><span class="lp-gradient">you trade best.</span></h2>
+        <p class="lp-lead reveal reveal-delay-2">
+          Practical answers: which sessions to trade, which strategies to size up, and which behaviours to cut from your playbook.
+        </p>
+      </div>
+
+      <div class="lp-tabs reveal" role="tablist">
+        <button class="lp-tab-btn active" data-tab="performance" role="tab">Performance</button>
+        <button class="lp-tab-btn" data-tab="behavior" role="tab">Behaviour</button>
+        <button class="lp-tab-btn" data-tab="automation" role="tab">Automation</button>
+      </div>
+
+      <div class="lp-tab-panel active modules-grid" data-panel="performance">
+        <div class="module-card reveal">
+          <span class="module-num">01</span>
+          <h3 class="lp-h3">Best Day</h3>
+          <p>Compare Monday through Friday by net P&amp;L, win rate, average R, and drawdown impact to find your sharpest days.</p>
+        </div>
+        <div class="module-card reveal reveal-delay-1">
+          <span class="module-num">02</span>
+          <h3 class="lp-h3">Best Time</h3>
+          <p>Find the exact hourly windows where your entries are cleanest and the market pays your model consistently.</p>
+        </div>
+        <div class="module-card reveal reveal-delay-2">
+          <span class="module-num">03</span>
+          <h3 class="lp-h3">Best Session</h3>
+          <p>Measure Asia, London, New York, and overlap performance with session-specific scorecards and P&amp;L breakdowns.</p>
+        </div>
+      </div>
+
+      <div class="lp-tab-panel modules-grid" data-panel="behavior">
+        <div class="module-card reveal">
+          <span class="module-num">04</span>
+          <h3 class="lp-h3">Emotion Tags</h3>
+          <p>Track fear, revenge, hesitation, confidence, patience, and rule-breaking patterns against your P&amp;L over time.</p>
+        </div>
+        <div class="module-card reveal reveal-delay-1">
+          <span class="module-num">05</span>
+          <h3 class="lp-h3">Risk Control</h3>
+          <p>Spot oversized losses, repeated stop-outs, high-risk days, and daily loss limit violations before they compound.</p>
+        </div>
+        <div class="module-card reveal reveal-delay-2">
+          <span class="module-num">06</span>
+          <h3 class="lp-h3">Strategy Grade</h3>
+          <p>Rank each setup by profit factor, average win, average loss, and consistency score across session and time.</p>
+        </div>
+      </div>
+
+      <div class="lp-tab-panel modules-grid" data-panel="automation">
+        <div class="module-card reveal">
+          <span class="module-num">07</span>
+          <h3 class="lp-h3">MT5 Import</h3>
+          <p>Sync closed trade history and open positions directly from MetaTrader 5 via MetaApi cloud — no EA required.</p>
+        </div>
+        <div class="module-card reveal reveal-delay-1">
+          <span class="module-num">08</span>
+          <h3 class="lp-h3">Weekly Reports</h3>
+          <p>AI-powered weekly and monthly review summaries from your live journal history with improvement notes and next steps.</p>
+        </div>
+        <div class="module-card reveal reveal-delay-2">
+          <span class="module-num">09</span>
+          <h3 class="lp-h3">Mentor View</h3>
+          <p>Shareable dashboards for your coach, prop desk, or trading team with structured performance breakdowns.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ PRICING ════════════════════════════════════ -->
+  <section class="lp-section" id="pricing">
+    <div class="lp-section-inner">
+
+      <div class="lp-section-header">
+        <div class="lp-eyebrow reveal">Pricing</div>
+        <h2 class="lp-h2 reveal reveal-delay-1">Paid access for<br><span class="lp-gradient">serious journaling.</span></h2>
+        <p class="lp-lead reveal reveal-delay-2">
+          Start free. Upgrade when you need MT5 sync, AI reports, and advanced analytics. Early access is open now.
+        </p>
+      </div>
+
+      <div class="plans-grid">
+        <div class="plan-card reveal">
+          <span class="plan-badge">Free Beta</span>
+          <div class="plan-name">Manual Starter</div>
+          <div class="plan-desc">For traders who want to start logging trades and reviewing basic performance right away.</div>
+          <div class="plan-price-row">
+            <div class="plan-price">Free</div>
+            <div class="plan-price-sub">During beta — pricing TBD</div>
+          </div>
+          <ul class="plan-features">
+            <li>Manual trade entry &amp; journal</li>
+            <li>Basic P&amp;L and win-rate analytics</li>
+            <li>Emotion and session tags</li>
+            <li>Limited monthly trade history</li>
+          </ul>
+          <a class="plan-btn" href="/login.html?mode=signup">Get Started Free</a>
+        </div>
+
+        <div class="plan-card featured reveal reveal-delay-1">
+          <span class="plan-badge">Most Popular</span>
+          <div class="plan-name">Pro Journal</div>
+          <div class="plan-desc">For active traders who need automation, AI reports, and deeper improvement analytics.</div>
+          <div class="plan-price-row">
+            <div class="plan-price"><sup>$</sup>15</div>
+            <div class="plan-price-sub">per month &nbsp;·&nbsp; ₹2,199 INR</div>
+          </div>
+          <ul class="plan-features">
+            <li>Everything in Manual Starter</li>
+            <li>Unlimited manual journaling</li>
+            <li>Best day, time, session &amp; strategy reports</li>
+            <li>AI-powered weekly trade summaries</li>
+            <li>Pro analytics and review tools</li>
+          </ul>
+          <a class="plan-btn featured" href="/login.html?mode=signup">Pro — Coming Soon</a>
+        </div>
+
+        <div class="plan-card reveal reveal-delay-2">
+          <span class="plan-badge">Advanced</span>
+          <div class="plan-name">Elite Desk</div>
+          <div class="plan-desc">For serious traders, prop desk teams, and multi-account performance tracking at scale.</div>
+          <div class="plan-price-row">
+            <div class="plan-price"><sup>$</sup>25</div>
+            <div class="plan-price-sub">per month &nbsp;·&nbsp; ₹3,399 INR</div>
+          </div>
+          <ul class="plan-features">
+            <li>Everything in Pro Journal</li>
+            <li>MT5 cloud sync unlocked</li>
+            <li>Live position P&amp;L stream (500ms)</li>
+            <li>Strategy scorecards &amp; equity review</li>
+            <li>Team or mentor dashboard access</li>
+          </ul>
+          <a class="plan-btn" href="/login.html?mode=signup">Elite — Coming Soon</a>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div style="margin-top:80px">
+        <div class="lp-section-header" style="margin-bottom:36px">
+          <div class="lp-eyebrow reveal">FAQ</div>
+          <h2 class="lp-h2 reveal reveal-delay-1">Common <span class="lp-gradient">questions.</span></h2>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item open reveal">
+            <button class="faq-q">Is MT5 sync available right now?<span class="faq-icon">+</span></button>
+            <div class="faq-answer">Yes — MT5 cloud sync via MetaApi is live. Connect your account with credentials only (no EA software). Live position P&amp;L streams every 500ms and trade history imports automatically after sync.</div>
+          </div>
+          <div class="faq-item reveal reveal-delay-1">
+            <button class="faq-q">Do I need to install anything for MT5?<span class="faq-icon">+</span></button>
+            <div class="faq-answer">Nothing to install. SwanXm connects to MetaTrader 5 through MetaApi's secure cloud. You only need your MT5 account number, password, and broker server name.</div>
+          </div>
+          <div class="faq-item reveal reveal-delay-2">
+            <button class="faq-q">When will paid plans be available?<span class="faq-icon">+</span></button>
+            <div class="faq-answer">Currently in open beta. The app is fully functional for manual journaling. Paid plan access via Stripe or Razorpay will be enabled once billing is connected — pricing is shown above.</div>
+          </div>
+          <div class="faq-item reveal reveal-delay-3">
+            <button class="faq-q">Is my MT5 password safe?<span class="faq-icon">+</span></button>
+            <div class="faq-answer">Your MT5 password is AES-encrypted at rest on our server and transmitted only over HTTPS. We use read-only MetaApi access — we never place trades or modify your account.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ BOOK DEMO ══════════════════════════════════ -->
+  <section class="lp-section" id="demo">
+    <div class="lp-section-inner">
+      <div class="demo-grid">
+
+        <!-- Form -->
+        <div class="demo-form-card reveal">
+          <div class="lp-eyebrow" style="margin-bottom:10px">Book a Demo</div>
+          <h2 class="lp-h2" style="font-size:1.9rem;margin-bottom:6px">Get early access</h2>
+          <p style="font-size:0.85rem;color:var(--text-3);margin-bottom:26px;line-height:1.6;transition:color var(--trans)">
+            Fill in your details and we'll set you up with the full SwanXm workspace.
+          </p>
+          <form id="demo-form">
+            <div class="lp-field">
+              <label>Full Name</label>
+              <input type="text" placeholder="Your name" required>
+            </div>
+            <div class="lp-field">
+              <label>Email</label>
+              <input type="email" placeholder="you@example.com" required>
+            </div>
+            <div class="lp-field">
+              <label>Trading Market</label>
+              <select required>
+                <option value="">Select market</option>
+                <option>Forex</option>
+                <option>XAUUSD (Gold)</option>
+                <option>Indices</option>
+                <option>Crypto</option>
+                <option>Oil &amp; Commodities</option>
+              </select>
+            </div>
+            <div class="lp-field">
+              <label>Interested Plan</label>
+              <select id="demo-plan">
+                <option>Pro Journal</option>
+                <option>Manual Starter</option>
+                <option>Elite Desk</option>
+              </select>
+            </div>
+            <div class="lp-field">
+              <label>Current Challenge</label>
+              <textarea placeholder="E.g. I overtrade during NY session and need MT5 auto journaling." required></textarea>
+            </div>
+            <button class="lp-btn-xl" type="submit" style="width:100%;border:none;cursor:pointer;font-size:0.9rem">
+              Continue to App →
+            </button>
+          </form>
+        </div>
+
+        <!-- What you get -->
+        <div class="demo-info reveal reveal-delay-2">
+          <div class="lp-eyebrow" style="margin-bottom:10px">What you get</div>
+          <h2 class="lp-h2">Everything you need<br><span class="lp-gradient">on day one.</span></h2>
+          <ul class="demo-checklist">
+            <li>
+              <div class="demo-check-num">1</div>
+              <div class="demo-check-text">
+                <strong>Instant journal access</strong>
+                <span>Start logging trades manually the moment you create your account.</span>
+              </div>
+            </li>
+            <li>
+              <div class="demo-check-num">2</div>
+              <div class="demo-check-text">
+                <strong>MT5 cloud connection</strong>
+                <span>Link your MT5 account with credentials — history and live positions sync automatically.</span>
+              </div>
+            </li>
+            <li>
+              <div class="demo-check-num">3</div>
+              <div class="demo-check-text">
+                <strong>Performance dashboard</strong>
+                <span>Best day, session, strategy, and equity curve from the very first trade.</span>
+              </div>
+            </li>
+            <li>
+              <div class="demo-check-num">4</div>
+              <div class="demo-check-text">
+                <strong>AI report preview</strong>
+                <span>Get a DeepSeek-powered weekly review once you have trade history in the system.</span>
+              </div>
+            </li>
+            <li>
+              <div class="demo-check-num">5</div>
+              <div class="demo-check-text">
+                <strong>Market tools</strong>
+                <span>Economic calendar, currency heatmap, position size calculator, and pip calculator included.</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CTA BANNER ════════════════════════════════ -->
+  <div class="cta-banner">
+    <div class="cta-banner-inner reveal">
+      <div class="lp-tag" style="margin:0 auto 22px;width:fit-content">
+        <span class="lp-pulse"></span>
+        Free During Beta
+      </div>
+      <h2 class="lp-h2">Start your trade journal<br><span class="lp-gradient">today — free.</span></h2>
+      <p class="lp-lead" style="text-align:center;margin:14px auto 36px;max-width:480px">
+        No credit card. No EA software. Connect MT5, log your first trade, and see your performance in minutes.
+      </p>
+      <div class="cta-btn-row">
+        <a class="lp-btn-xl" href="/login.html?mode=signup">Create Free Account</a>
+        <a class="lp-btn-xl-ghost" href="/login.html">Login to Dashboard</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FOOTER ════════════════════════════════════ -->
+  <footer class="lp-footer">
+    <div class="lp-footer-inner">
+      <a class="lp-footer-brand" href="#home">
+        <img src="/assets/swanxm-logo.png" alt="SwanXm logo">
+        <div class="lp-footer-brand-text">
+          <strong>SwanXm Trade Book</strong>
+          <small>Professional MT5 Journal</small>
+        </div>
+      </a>
+      <ul class="lp-footer-links">
+        <li><a href="#platform">Platform</a></li>
+        <li><a href="#analytics">Analytics</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#demo">Book Demo</a></li>
+        <li><a href="/terms.html" target="_blank">Terms</a></li>
+        <li><a href="/login.html">Login</a></li>
+      </ul>
+      <div class="lp-footer-copy">© 2026 SwanXm Trade Book. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+  // ── Theme: no-flash init ─────────────────────────
+  (function() {
+    if (localStorage.getItem('sxm-lp-theme') === 'light') {
+      document.body.classList.add('lp-light');
+      var icon = document.getElementById('lp-theme-icon');
+      if (icon) icon.textContent = '☀';
+    }
+  })();
+
+  // ── Theme toggle ─────────────────────────────────
+  document.getElementById('lp-theme-toggle').addEventListener('click', function() {
+    var isLight = document.body.classList.toggle('lp-light');
+    document.getElementById('lp-theme-icon').textContent = isLight ? '☀' : '☾';
+    localStorage.setItem('sxm-lp-theme', isLight ? 'light' : 'dark');
+  });
+
+  // ── Nav: shrink on scroll ────────────────────────
+  var nav = document.getElementById('lp-nav');
+  var sections = ['home','platform','analytics','pricing','demo'];
+
+  window.addEventListener('scroll', function() {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+    // Scroll spy
+    var scrollY = window.scrollY + 120;
+    var active = sections[0];
+    sections.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el && el.offsetTop <= scrollY) active = id;
+    });
+    document.querySelectorAll('#lp-nav-links a').forEach(function(a) {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + active);
+    });
+  }, { passive: true });
+
+  // ── Smooth anchor scrolling ──────────────────────
+  document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      var id = a.getAttribute('href').slice(1);
+      if (!id) return;
+      var el = document.getElementById(id);
+      if (el) { e.preventDefault(); el.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+
+  // ── Mobile hamburger ─────────────────────────────
+  var hamburger = document.getElementById('lp-hamburger');
+  var mobileMenu = document.getElementById('lp-mobile-menu');
+
+  hamburger.addEventListener('click', function() {
+    var open = hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open', open);
+    mobileMenu.style.display = open ? 'flex' : 'none';
+  });
+  mobileMenu.querySelectorAll('a').forEach(function(a) {
+    a.addEventListener('click', function() {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+      mobileMenu.style.display = 'none';
+    });
+  });
+
+  // ── Scroll-reveal (IntersectionObserver) ─────────
+  var revealObs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        revealObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.10, rootMargin: '0px 0px -36px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(function(el) { revealObs.observe(el); });
+
+  // ── Count-up numbers ─────────────────────────────
+  var countObs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (!e.isIntersecting) return;
+      var el = e.target;
+      var target = parseInt(el.dataset.target, 10);
+      var dur = 1300;
+      var start = null;
+      requestAnimationFrame(function step(ts) {
+        if (!start) start = ts;
+        var p = Math.min((ts - start) / dur, 1);
+        var ease = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.floor(ease * target);
+        if (p < 1) requestAnimationFrame(step);
+        else el.textContent = target;
+      });
+      countObs.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.count-up').forEach(function(el) { countObs.observe(el); });
+
+  // ── Animate hero chart bars on load ──────────────
+  var barTargets = [44,68,28,82,55,22,91];
+  document.querySelectorAll('#hero-bars .hc-bar').forEach(function(bar, i) {
+    setTimeout(function() {
+      bar.style.height = barTargets[i] + '%';
+    }, 900 + i * 70);
+  });
+
+  // ── Analytics tabs ───────────────────────────────
+  document.querySelectorAll('.lp-tab-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var tab = btn.dataset.tab;
+      document.querySelectorAll('.lp-tab-btn').forEach(function(b) {
+        b.classList.toggle('active', b === btn);
+      });
+      document.querySelectorAll('.lp-tab-panel').forEach(function(p) {
+        var isActive = p.dataset.panel === tab;
+        p.classList.toggle('active', isActive);
+        if (isActive) {
+          p.querySelectorAll('.reveal').forEach(function(r) {
+            r.classList.remove('visible');
+            setTimeout(function() { r.classList.add('visible'); }, 50);
+          });
+        }
+      });
+    });
+  });
+
+  // ── FAQ accordion ────────────────────────────────
+  document.querySelectorAll('.faq-q').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var item = btn.closest('.faq-item');
+      var wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(function(i) { i.classList.remove('open'); });
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+
+  // ── Demo form ────────────────────────────────────
+  document.getElementById('demo-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    localStorage.setItem('swanxmSelectedPlan', document.getElementById('demo-plan').value);
+    window.location.href = '/login.html?mode=signup';
+  });
+  </script>
 </body>
 </html>
