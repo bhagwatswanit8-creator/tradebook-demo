@@ -654,9 +654,9 @@ function renderMt5TradePreview() {
         </div>`;
       }).join("")
     : `<div class="live-trade-empty">
-        <strong>MT5 bridge connected</strong>
+        <strong>No open positions</strong>
         <span>${escapeHtml(mt5LiveStatusMessage || "No open MT5 positions at the moment.")}</span>
-        <em>Open positions will appear here after you place a live trade on this exact MT5 account.</em>
+        <em>Open positions will appear here once you have a live trade running on your MT5 account.</em>
       </div>`;
 
   mt5TradeLists.forEach((node) => {
@@ -1161,7 +1161,7 @@ function renderEaStatus(data) {
       const agoStr = ago < 60 ? ago + "s ago" : ago < 3600 ? Math.round(ago/60) + "m ago" : Math.round(ago/3600) + "h ago";
       lastSyncEl.textContent = "Last synced: " + d.toLocaleTimeString() + " (" + agoStr + ")";
     } else {
-      lastSyncEl.textContent = "Not synced yet \u2014 install the EA to begin";
+      lastSyncEl.textContent = "Not synced yet — connect MT5 to begin";
     }
   }
   if (accountEl && data.account) {
@@ -1175,7 +1175,7 @@ function renderEaStatus(data) {
   if (posCountEl) posCountEl.textContent = posCount > 0 ? posCount : "\u2014";
   if (badgeEl)   badgeEl.hidden = !hasSynced;
   if (msgEl && hasSynced) {
-    msgEl.textContent = "EA is active. Trades and open positions sync automatically every 30 seconds.";
+    msgEl.textContent = "Connected via cloud — trades and open positions sync automatically.";
   }
   if (posListEl) {
     if (posCount === 0) {
